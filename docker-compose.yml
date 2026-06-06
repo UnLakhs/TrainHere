@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgis/postgis:17-3.5
+    container_name: trainhere-postgres
+    environment:
+      POSTGRES_DB: trainhere
+      POSTGRES_USER: trainhere
+      POSTGRES_PASSWORD: trainhere
+    ports:
+      - "5432:5432"
+    volumes:
+      - trainhere-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trainhere -d trainhere"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  trainhere-postgres-data:

@@ -1,0 +1,8 @@
+package com.apostolos.backend.location;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface GymDetailsRepository extends JpaRepository<GymDetails, UUID> {
+}

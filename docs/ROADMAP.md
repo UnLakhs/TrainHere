@@ -23,7 +23,7 @@ Suggested first implementation step:
 * Add a minimal React app.
 * Verify both can run locally.
 
-## Phase 1: Domain And Database
+## Phase 1: Domain And Database (Backend Foundation Complete)
 
 Purpose: define the core TrainHere data model before building complex UI.
 
@@ -221,9 +221,9 @@ Potential features:
 
 ## Immediate Next Step
 
-Start with Phase 1:
+Start with Phase 2:
 
-1. Add PostgreSQL and PostGIS configuration.
-2. Create the first database migration.
-3. Model locations as the first core domain entity.
-4. Add seed data for local development.
+1. Add Spring Security configuration.
+2. Add password-based registration and login.
+3. Add JWT access tokens.
+4. Add the first protected user profile endpoint.

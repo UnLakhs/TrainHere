@@ -24,3 +24,6 @@ backend/.idea/
 .env
 .env.*
 !.env.example
+
+# Personal local notes
+.local-notes/

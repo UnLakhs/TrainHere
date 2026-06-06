@@ -1,9 +1,8 @@
 # TrainHere
-# WorkoutMap
 
 ## Overview
 
-WorkoutMap is a community-driven platform that helps users discover and share workout locations around the world.
+TrainHere is a community-driven platform that helps users discover and share workout locations around the world.
 
 The platform focuses on two main categories:
 
@@ -12,7 +11,7 @@ The platform focuses on two main categories:
 
 Users can easily find places to train, view detailed information, read reviews, upload photos, and contribute new locations to the platform.
 
-The goal of WorkoutMap is to become the go-to platform for athletes, travelers, fitness enthusiasts, and calisthenics practitioners looking for quality training spots wherever they are.
+The goal of TrainHere is to become the go-to platform for athletes, travelers, fitness enthusiasts, and calisthenics practitioners looking for quality training spots wherever they are.
 
 ---
 
@@ -30,7 +29,7 @@ Current map services often provide limited information about:
 * Maintenance status
 * Training conditions
 
-WorkoutMap solves this problem by providing a specialized fitness-focused directory powered by community contributions.
+TrainHere solves this problem by providing a specialized fitness-focused directory powered by community contributions.
 
 ---
 
@@ -291,4 +290,4 @@ This MVP is sufficient to launch an early public version and gather feedback fro
 
 # Long-Term Vision
 
-WorkoutMap aims to become the largest fitness location directory for gyms and calisthenics parks, allowing users worldwide to discover the best places to train, contribute valuable information, and build local fitness communities.
+TrainHere aims to become the largest fitness location directory for gyms and calisthenics parks, allowing users worldwide to discover the best places to train, contribute valuable information, and build local fitness communities.

@@ -142,4 +142,25 @@ public class Location {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
+
+    public void updateDetails(
+            String name,
+            LocationType type,
+            String description,
+            String country,
+            String city,
+            String address,
+            BigDecimal latitude,
+            BigDecimal longitude
+    ) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.country = country;
+        this.city = city;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.updatedAt = Instant.now();
+    }
 }

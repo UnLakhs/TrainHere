@@ -270,39 +270,6 @@ Personalized recommendations based on:
 
 ---
 
-# Suggested Tech Stack
-
-## Frontend
-
-* React
-* Next.js
-* TypeScript
-* Tailwind CSS
-
-## Backend
-
-* Spring Boot
-* Java
-
-## Database
-
-* PostgreSQL
-
-## Authentication
-
-* JWT Authentication
-
-## Storage
-
-* Cloudinary
-
-## Maps
-
-* OpenStreetMap
-* Leaflet
-
----
-
 # MVP Version
 
 The first version should include:

@@ -18,11 +18,15 @@ public class LocationService {
 
     //get all approved locations as a list
     public List<LocationResponse> getApprovedLocations() {
-        return locationRepository.findByStatus(LocationStatus.APPROVED)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        return getLocationsByStatus(LocationStatus.APPROVED);
+    }
 
+    public List<LocationResponse> getPendingLocations() {
+        return getLocationsByStatus(LocationStatus.PENDING);
+    }
+
+    public List<LocationResponse> getRejectedLocations() {
+        return getLocationsByStatus(LocationStatus.REJECTED);
     }
 
     //get info on location
@@ -50,6 +54,22 @@ public class LocationService {
         return mapToResponse(savedLocation);
     }
 
+    //add location
+    public LocationResponse createLocation(LocationRequest request) {
+        Location location = new Location(
+                request.name(),
+                request.type(),
+                request.country(),
+                request.city(),
+                request.latitude(),
+                request.longitude()
+                );
+        applyRequestToEntity(request, location);
+
+        Location savedLocation = locationRepository.save(location);
+        return mapToResponse(savedLocation);
+    }
+
     private void applyRequestToEntity(LocationRequest request, Location location) {
         location.updateDetails(
                 request.name(),
@@ -61,6 +81,13 @@ public class LocationService {
                 request.latitude(),
                 request.longitude()
         );
+    }
+
+    private List<LocationResponse> getLocationsByStatus(LocationStatus status) {
+        return locationRepository.findByStatus(status)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     private LocationResponse mapToResponse(Location location) {

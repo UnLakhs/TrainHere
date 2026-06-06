@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.apostolos.backend.location.LocationRepository;
+import com.apostolos.backend.user.AppUserRepository;
 
 @SpringBootTest(properties = {
         "spring.autoconfigure.exclude="
@@ -17,6 +18,9 @@ class BackendApplicationTests {
 
     @MockitoBean
     private LocationRepository locationRepository;
+
+    @MockitoBean
+    private AppUserRepository appUserRepository;
 
     @Test
     void contextLoads() {

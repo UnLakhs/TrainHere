@@ -1,4 +1,22 @@
 package com.apostolos.backend.auth;
 
-public class RegisterRequest {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record RegisterRequest(
+        @NotBlank
+        String displayName,
+
+        @NotBlank
+        @Email
+        String email,
+
+        @NotBlank
+        @Size(min = 8)
+        String password,
+
+        @NotBlank
+        String confirmPassword) {
+
 }

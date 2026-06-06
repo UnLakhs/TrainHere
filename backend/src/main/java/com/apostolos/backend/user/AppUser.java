@@ -11,8 +11,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "app_users")
 public class AppUser {
 
@@ -22,6 +24,9 @@ public class AppUser {
 
     @Column(nullable = false, unique = true, length = 320)
     private String email;
+
+    @Column(nullable = false)
+    private String passwordHash;
 
     @Column(nullable = false, length = 120)
     private String displayName;
@@ -47,31 +52,37 @@ public class AppUser {
         this.displayName = displayName;
     }
 
-    public UUID getId() {
-        return id;
+    public AppUser(String email, String displayName, String passwordHash) {
+        this.email = email;
+        this.displayName = displayName;
+        this.passwordHash = passwordHash;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
+//    public UUID getId() {
+//        return id;
+//    }
+//
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public String getDisplayName() {
+//        return displayName;
+//    }
+//
+//    public String getAvatarUrl() {
+//        return avatarUrl;
+//    }
+//
+//    public UserRole getRole() {
+//        return role;
+//    }
+//
+//    public Instant getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    public Instant getUpdatedAt() {
+//        return updatedAt;
+//    }
 }

@@ -39,7 +39,7 @@ public class AuthController {
                 user.getId(),
                 user.getEmail(),
                 user.getDisplayName(),
-                null
+                user.getRole()
         );
     }
 }

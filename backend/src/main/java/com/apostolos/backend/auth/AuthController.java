@@ -1,8 +1,12 @@
 package com.apostolos.backend.auth;
 
+import com.apostolos.backend.user.AppUser;
+import com.apostolos.backend.user.CurrentUserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,5 +31,15 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @GetMapping("/me")
+    public CurrentUserResponse me(@AuthenticationPrincipal AppUser user) {
+        return new CurrentUserResponse (
+                user.getId(),
+                user.getEmail(),
+                user.getDisplayName(),
+                null
+        );
     }
 }

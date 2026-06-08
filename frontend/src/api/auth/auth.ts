@@ -9,6 +9,13 @@ export type AuthResponse = {
   token: string;
 };
 
+export type CurrentUserResponse = {
+  id: string;
+  email: string;
+  displayName: string;
+  role: string;
+};
+
 //register users
 export async function registerUser(
   displayName: string,
@@ -43,6 +50,28 @@ export async function loginUser(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    const errorMessage = await getErrorMessage(response);
+    throw new Error(errorMessage);
+  }
+
+  return await response.json();
+}
+
+export async function getCurrentUser(): Promise<CurrentUserResponse> {
+  const token = localStorage.getItem("trainhereToken");
+
+  if (!token) {
+    throw new Error("You need to sign in first.");
+  }
+
+  const response = await fetch(`${baseUrl}/api/auth/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {

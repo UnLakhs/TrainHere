@@ -11,10 +11,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public AuthService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public AuthResponse register(RegisterRequest registerRequest) {
@@ -34,6 +36,22 @@ public class AuthService {
         );
 
         AppUser savedUser = appUserRepository.save(user);
-        return new AuthResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getDisplayName());
+        String token = jwtService.generateToken(savedUser);
+        return new AuthResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getDisplayName(), token);
+    }
+
+    //login logic
+    public AuthResponse login(LoginRequest loginRequest) {
+
+        //check if the given password matches the stored password
+        AppUser foundUser = appUserRepository.findByEmail(loginRequest.email())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+
+        if (!passwordEncoder.matches(loginRequest.password(), foundUser.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        }
+
+        String token = jwtService.generateToken(foundUser);
+        return new AuthResponse(foundUser.getId(), foundUser.getEmail(), foundUser.getDisplayName(), token);
     }
 }

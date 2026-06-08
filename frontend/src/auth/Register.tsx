@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { registerUser } from "./api/auth/register";
+import { registerUser } from "../api/auth/register";
+
 
 const Register = () => {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");

@@ -82,6 +82,10 @@ export async function getCurrentUser(): Promise<CurrentUserResponse> {
   return await response.json();
 }
 
+export function logoutUser() {
+  localStorage.removeItem("trainhereToken");
+}
+
 async function getErrorMessage(response: Response) {
   const fallbackMessage = "Something went wrong. Please try again.";
 

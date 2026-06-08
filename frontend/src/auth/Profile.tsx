@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, type CurrentUserResponse } from "../api/auth/auth";
+import { getCurrentUser, logoutUser, type CurrentUserResponse } from "../api/auth/auth";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Profile = () => {
           return;
         }
 
-        localStorage.removeItem("trainhereToken");
+        logoutUser();
         setStatus("error");
         setMessage(error instanceof Error ? error.message : "Could not load your profile.");
         setTimeout(() => navigate("/login"), 900);
@@ -41,7 +41,7 @@ const Profile = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("trainhereToken");
+    logoutUser();
     navigate("/login");
   };
 
@@ -84,7 +84,7 @@ const Profile = () => {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-md border border-zinc-800 bg-zinc-950 p-4">
                   <p className="text-sm text-zinc-400">Email</p>
-                  <p className="mt-2 break-words font-medium text-zinc-100">
+                  <p className="mt-2 wrap-break-word font-medium text-zinc-100">
                     {user.email}
                   </p>
                 </div>
@@ -96,7 +96,7 @@ const Profile = () => {
 
                 <div className="rounded-md border border-zinc-800 bg-zinc-950 p-4 sm:col-span-2">
                   <p className="text-sm text-zinc-400">User ID</p>
-                  <p className="mt-2 break-words font-mono text-sm text-zinc-100">
+                  <p className="mt-2 wrap-break-word font-mono text-sm text-zinc-100">
                     {user.id}
                   </p>
                 </div>

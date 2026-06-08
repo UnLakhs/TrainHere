@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerUser } from "../api/auth/register";
+import { registerUser } from "../api/auth/auth";
 
 
 const Register = () => {
@@ -8,7 +8,8 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const displayName = formData.get("displayName") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -23,14 +24,15 @@ const Register = () => {
     try {
       setStatus("loading");
       setMessage("");
-      await registerUser(displayName, email, password, confirmPassword);
+      const authResponse = await registerUser(displayName, email, password, confirmPassword);
+      localStorage.setItem("trainhereToken", authResponse.token);
       setStatus("success");
       setMessage("Account created successfully.");
-      event.currentTarget.reset();
+      form.reset();
     } catch (error) {
       console.error("Error registering user:", error);
       setStatus("error");
-      setMessage("Could not create account. Please try again.");
+      setMessage(error instanceof Error ? error.message : "Could not create account. Please try again.");
     }
   };
 

@@ -7,6 +7,7 @@ import Register from './auth/Register.tsx';
 import Login from './auth/Login.tsx';
 import Profile from './auth/Profile.tsx';
 import Layout from './components/Layout.tsx';
+import LocationDetails from './locations/LocationDetails.tsx';
 
 
 const router = createBrowserRouter([
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {path: "/", element: <App />},
+      {path: "/locations/:id", element: <LocationDetails /> },
       {path: "/register", element: <Register /> },
       {path: "/login", element: <Login /> },
       {path: "/profile", element: <Profile /> }

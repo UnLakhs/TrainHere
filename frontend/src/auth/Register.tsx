@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerUser } from "../api/auth/auth";
+import { registerUser, saveAuthToken } from "../api/auth/auth";
 
 
 const Register = () => {
@@ -25,7 +25,7 @@ const Register = () => {
       setStatus("loading");
       setMessage("");
       const authResponse = await registerUser(displayName, email, password, confirmPassword);
-      localStorage.setItem("trainhereToken", authResponse.token);
+      saveAuthToken(authResponse.token);
       setStatus("success");
       setMessage("Account created successfully.");
       form.reset();
@@ -37,7 +37,7 @@ const Register = () => {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-50">
+    <main className="min-h-[calc(100vh-4rem)] bg-zinc-950 px-6 py-10 text-zinc-50">
       <section className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl items-center gap-10 lg:grid-cols-[1fr_440px]">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-wide text-emerald-300">

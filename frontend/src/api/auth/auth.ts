@@ -1,6 +1,8 @@
 //This file is to fetch methods related to auth
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
+const authTokenKey = "trainhereToken";
+const authChangedEventName = "trainhere-auth-changed";
 
 export type AuthResponse = {
   userId: string;
@@ -61,7 +63,7 @@ export async function loginUser(
 }
 
 export async function getCurrentUser(): Promise<CurrentUserResponse> {
-  const token = localStorage.getItem("trainhereToken");
+  const token = localStorage.getItem(authTokenKey);
 
   if (!token) {
     throw new Error("You need to sign in first.");
@@ -83,7 +85,31 @@ export async function getCurrentUser(): Promise<CurrentUserResponse> {
 }
 
 export function logoutUser() {
-  localStorage.removeItem("trainhereToken");
+  localStorage.removeItem(authTokenKey);
+  notifyAuthChanged();
+}
+
+export function saveAuthToken(token: string) {
+  localStorage.setItem(authTokenKey, token);
+  notifyAuthChanged();
+}
+
+export function hasAuthToken() {
+  return Boolean(localStorage.getItem(authTokenKey));
+}
+
+export function subscribeToAuthChanges(callback: () => void) {
+  window.addEventListener(authChangedEventName, callback);
+  window.addEventListener("storage", callback);
+
+  return () => {
+    window.removeEventListener(authChangedEventName, callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function notifyAuthChanged() {
+  window.dispatchEvent(new Event(authChangedEventName));
 }
 
 async function getErrorMessage(response: Response) {

@@ -1,15 +1,39 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { hasAuthToken, logoutUser, subscribeToAuthChanges } from "../api/auth/auth";
+import {
+  getCurrentUser,
+  hasAuthToken,
+  logoutUser,
+  subscribeToAuthChanges,
+  type CurrentUserResponse,
+} from "../api/auth/auth";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(hasAuthToken());
+  const [currentUser, setCurrentUser] = useState<CurrentUserResponse | null>(null);
 
   useEffect(() => {
-    return subscribeToAuthChanges(() => {
-      setIsAuthenticated(hasAuthToken());
-    });
+    async function syncCurrentUser() {
+      const hasToken = hasAuthToken();
+      setIsAuthenticated(hasToken);
+
+      if (!hasToken) {
+        setCurrentUser(null);
+        return;
+      }
+
+      try {
+        const user = await getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.error("Error loading navbar user:", error);
+        setCurrentUser(null);
+      }
+    }
+
+    syncCurrentUser();
+    return subscribeToAuthChanges(syncCurrentUser);
   }, []);
 
   const handleLogout = () => {
@@ -38,6 +62,14 @@ const Navbar = () => {
 
           {isAuthenticated && (
             <>
+              <NavLink className={linkClass} to="/locations/new">
+                Submit location
+              </NavLink>
+              {currentUser?.role === "ADMIN" && (
+                <NavLink className={linkClass} to="/admin">
+                  Admin
+                </NavLink>
+              )}
               <NavLink className={linkClass} to="/profile">
                 Profile
               </NavLink>

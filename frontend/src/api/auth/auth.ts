@@ -85,20 +85,24 @@ export async function getCurrentUser(): Promise<CurrentUserResponse> {
   return await response.json();
 }
 
+// Logs the user out by removing the stored auth token and notifying listeners.
 export function logoutUser() {
   localStorage.removeItem(authTokenKey);
   notifyAuthChanged();
 }
 
+// Saves the auth token to local storage and notifies listeners that auth state changed.
 export function saveAuthToken(token: string) {
   localStorage.setItem(authTokenKey, token);
   notifyAuthChanged();
 }
 
+// Returns true when an auth token exists in local storage.
 export function hasAuthToken() {
   return Boolean(localStorage.getItem(authTokenKey));
 }
 
+// Subscribes to auth state changes and returns an unsubscribe function.
 export function subscribeToAuthChanges(callback: () => void) {
   window.addEventListener(authChangedEventName, callback);
   window.addEventListener("storage", callback);
@@ -109,10 +113,12 @@ export function subscribeToAuthChanges(callback: () => void) {
   };
 }
 
+// Dispatches a custom auth-changed event so UI can react to login/logout actions.
 function notifyAuthChanged() {
   window.dispatchEvent(new Event(authChangedEventName));
 }
 
+// Extracts a readable error message from the response body, with a fallback message.
 async function getErrorMessage(response: Response) {
   const fallbackMessage = "Something went wrong. Please try again.";
 

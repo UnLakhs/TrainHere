@@ -67,9 +67,24 @@ const LocationDetails = () => {
               <p className="text-zinc-300">
                 {location.city}, {location.country}
               </p>
+              {location.description && (
+                <p className="max-w-3xl text-zinc-300">{location.description}</p>
+              )}
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-md border border-zinc-800 bg-zinc-950 p-4">
+                <p className="text-sm text-zinc-400">Address</p>
+                <p className="mt-2 text-zinc-100">
+                  {location.address || "No address provided"}
+                </p>
+              </div>
+
+              <div className="rounded-md border border-zinc-800 bg-zinc-950 p-4">
+                <p className="text-sm text-zinc-400">Status</p>
+                <p className="mt-2 text-zinc-100">{location.status}</p>
+              </div>
+
               <div className="rounded-md border border-zinc-800 bg-zinc-950 p-4">
                 <p className="text-sm text-zinc-400">Average rating</p>
                 <p className="mt-2 text-lg font-semibold text-zinc-100">

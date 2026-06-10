@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { createLocation, type LocationRequest } from "../api/locations/locations";
+import {
+  createLocation,
+  type LocationRequest,
+  type LocationResponse,
+} from "../api/locations/locations";
 
 type LocationFormState = Omit<LocationRequest, "type" | "latitude" | "longitude"> & {
   type: LocationRequest["type"] | "";
@@ -18,9 +22,32 @@ const initialLocationFormState: LocationFormState = {
   longitude: "",
 };
 
-const CreateLocationForm = () => {
+type CreateLocationFormProps = {
+  initialLocation?: LocationResponse;
+  submitLabel?: string;
+  successMessage?: string;
+  onSubmitLocation?: (request: LocationRequest) => Promise<LocationResponse>;
+};
+
+const mapLocationToFormState = (location: LocationResponse): LocationFormState => ({
+  name: location.name,
+  type: location.type,
+  description: location.description ?? "",
+  country: location.country,
+  city: location.city,
+  address: location.address ?? "",
+  latitude: String(location.latitude),
+  longitude: String(location.longitude),
+});
+
+const CreateLocationForm = ({
+  initialLocation,
+  submitLabel = "Create Location",
+  successMessage = "Location submitted successfully.",
+  onSubmitLocation = createLocation,
+}: CreateLocationFormProps) => {
   const [formData, setFormData] = useState<LocationFormState>(
-    initialLocationFormState,
+    initialLocation ? mapLocationToFormState(initialLocation) : initialLocationFormState,
   );
   const [createStatus, setCreateStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -51,15 +78,17 @@ const CreateLocationForm = () => {
     try {
       setCreateStatus("loading");
       setCreateMessage("");
-      await createLocation({
+      await onSubmitLocation({
         ...formData,
         type: formData.type,
         latitude: Number(formData.latitude),
         longitude: Number(formData.longitude),
       });
-      setFormData(initialLocationFormState);
+      if (!initialLocation) {
+        setFormData(initialLocationFormState);
+      }
       setCreateStatus("success");
-      setCreateMessage("Location submitted successfully.");
+      setCreateMessage(successMessage);
     } catch (error) {
       console.error("Error creating location:", error);
       setCreateStatus("error");
@@ -249,7 +278,7 @@ const CreateLocationForm = () => {
           disabled={createStatus === "loading"}
           type="submit"
         >
-          {createStatus === "loading" ? "Creating location..." : "Create Location"}
+          {createStatus === "loading" ? "Saving location..." : submitLabel}
         </button>
       </form>
     </section>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getCurrentUser, type CurrentUserResponse } from "../api/auth/auth";
 import {
   getPendingLocations,
@@ -85,6 +86,12 @@ const AdminDashboard = () => {
       </div>
 
       <div className="mt-5 flex flex-wrap gap-3">
+        <Link
+          className="rounded-md border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-100 transition hover:border-zinc-500 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 focus:ring-offset-zinc-900"
+          to={`/admin/locations/${location.id}/edit`}
+        >
+          Edit
+        </Link>
         <button
           className="rounded-md bg-emerald-400 px-3 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
           type="button"

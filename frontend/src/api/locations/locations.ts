@@ -4,8 +4,11 @@ export type LocationResponse = {
   id: string;
   name: string;
   type: "GYM" | "CALISTHENICS_PARK";
+  status: LocationStatus;
+  description: string | null;
   city: string;
   country: string;
+  address: string | null;
   latitude: number;
   longitude: number;
   averageRating: number;
@@ -79,18 +82,16 @@ export const getLocationById = async (
   }
 };
 
-//Create new location, token needed in header to verify that user is logged in, and also to check if user has the right role to create a location (ADMIN or TRAINER)
+//Create new location, token needed in header to verify that user is logged in
 export const createLocation = async (
   request: LocationRequest,
 ): Promise<LocationResponse> => {
   try {
-    const token = localStorage.getItem("trainhereToken");
-
     const response = await fetch(`${baseUrl}/api/locations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...getAuthorizationHeader(),
       },
       body: JSON.stringify(request),
     });
@@ -107,18 +108,66 @@ export const createLocation = async (
   }
 };
 
+export const getAdminLocationById = async (
+  id: string,
+): Promise<LocationResponse> => {
+  try {
+    const response = await fetch(`${baseUrl}/api/locations/admin/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthorizationHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to fetch location.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching admin location:", error);
+    throw error;
+  }
+};
+
+export const updateLocation = async (
+  id: string,
+  request: LocationRequest,
+): Promise<LocationResponse> => {
+  try {
+    const response = await fetch(`${baseUrl}/api/locations/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthorizationHeader(),
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to update location.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating location:", error);
+    throw error;
+  }
+};
+
 export const updateLocationStatus = async (
   id: string,
   status: LocationStatus,
 ): Promise<LocationResponse> => {
   try {
-    const token = localStorage.getItem("trainhereToken");
-
     const response = await fetch(`${baseUrl}/api/locations/${id}/status`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...getAuthorizationHeader(),
       },
       body: JSON.stringify({ status }),
     });
@@ -139,13 +188,11 @@ const getAdminLocationsByStatus = async (
   status: "pending" | "rejected",
 ): Promise<LocationResponse[]> => {
   try {
-    const token = localStorage.getItem("trainhereToken");
-
     const response = await fetch(`${baseUrl}/api/locations/${status}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...getAuthorizationHeader(),
       },
     });
 
@@ -160,5 +207,10 @@ const getAdminLocationsByStatus = async (
     throw error;
   }
 };
-//PUT
+
+const getAuthorizationHeader = (): Record<string, string> => {
+  const token = localStorage.getItem("trainhereToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 //DELETE

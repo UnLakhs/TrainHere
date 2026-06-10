@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/locations/pending", "/api/locations/rejected").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/locations/admin/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/locations/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/locations/{id}/status").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/locations/{id}").hasRole("ADMIN")

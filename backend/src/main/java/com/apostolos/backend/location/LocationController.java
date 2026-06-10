@@ -46,6 +46,11 @@ public class LocationController {
 
     @GetMapping("/{id}")
     public LocationResponse getLocationInfo(@PathVariable UUID id) {
+        return locationService.getApprovedLocationInfo(id);
+    }
+
+    @GetMapping("/admin/{id}")
+    public LocationResponse getAdminLocationInfo(@PathVariable UUID id) {
         return locationService.getLocationInfo(id);
     }
 

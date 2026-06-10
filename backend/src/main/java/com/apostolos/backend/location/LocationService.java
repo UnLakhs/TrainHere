@@ -37,6 +37,17 @@ public class LocationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
     }
 
+    public LocationResponse getApprovedLocationInfo(UUID id) {
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
+
+        if (location.getStatus() != LocationStatus.APPROVED) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found");
+        }
+
+        return mapToResponse(location);
+    }
+
     //delete location
     public void deleteLocation(UUID id) {
         if (!locationRepository.existsById(id)) {
@@ -106,8 +117,11 @@ public class LocationService {
                 location.getId(),
                 location.getName(),
                 location.getType(),
+                location.getStatus(),
+                location.getDescription(),
                 location.getCity(),
                 location.getCountry(),
+                location.getAddress(),
                 location.getLatitude(),
                 location.getLongitude(),
                 location.getAverageRating(),

@@ -1,14 +1,10 @@
 import { useEffect, useRef } from "react";
 import maplibregl, { type LngLatBoundsLike, type Map, type Marker } from "maplibre-gl";
-import type {
-  LocationBoundsRequest,
-  LocationResponse,
-} from "../api/locations/locations";
+import type { LocationResponse } from "../api/locations/locations";
 
 type LocationMapProps = {
   locations: LocationResponse[];
   selectedLocationId: string | null;
-  onBoundsChange: (bounds: LocationBoundsRequest) => void;
   onSelectLocation: (id: string) => void;
 };
 
@@ -19,14 +15,12 @@ const mapStyle =
 const LocationMap = ({
   locations,
   selectedLocationId,
-  onBoundsChange,
   onSelectLocation,
 }: LocationMapProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
   const hasFitInitialBoundsRef = useRef(false);
-  const shouldRefreshBoundsAfterMoveRef = useRef(false);
   const previousSelectedLocationIdRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -42,29 +36,6 @@ const LocationMap = ({
     });
 
     mapRef.current.addControl(new maplibregl.NavigationControl(), "top-right");
-    mapRef.current.on("movestart", (event) => {
-      shouldRefreshBoundsAfterMoveRef.current = Boolean(event.originalEvent);
-    });
-
-    mapRef.current.on("moveend", () => {
-      if (!shouldRefreshBoundsAfterMoveRef.current) {
-        return;
-      }
-
-      shouldRefreshBoundsAfterMoveRef.current = false;
-      const bounds = mapRef.current?.getBounds();
-
-      if (!bounds) {
-        return;
-      }
-
-      onBoundsChange({
-        minLatitude: bounds.getSouth(),
-        maxLatitude: bounds.getNorth(),
-        minLongitude: bounds.getWest(),
-        maxLongitude: bounds.getEast(),
-      });
-    });
 
     return () => {
       markersRef.current.forEach((marker) => marker.remove());
@@ -72,7 +43,7 @@ const LocationMap = ({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [onBoundsChange]);
+  }, []);
 
   useEffect(() => {
     const map = mapRef.current;

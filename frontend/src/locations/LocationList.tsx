@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   getLocations,
-  getLocationsWithinBounds,
-  type LocationBoundsRequest,
   type LocationResponse,
 } from "../api/locations/locations";
 import LocationMap from "./LocationMap";
@@ -41,29 +39,6 @@ const LocationList = () => {
     };
 
     fetchLocations();
-  }, []);
-
-  const handleBoundsChange = useCallback(async (bounds: LocationBoundsRequest) => {
-    try {
-      const response = await getLocationsWithinBounds(bounds);
-      setLocations(response);
-      setSelectedLocationId((currentSelectedId) => {
-        if (response.some((location) => location.id === currentSelectedId)) {
-          return currentSelectedId;
-        }
-
-        return response[0]?.id ?? null;
-      });
-      setStatus("success");
-    } catch (error) {
-      console.error("Error fetching locations inside map bounds:", error);
-      setStatus("error");
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "Could not load locations inside this map area.",
-      );
-    }
   }, []);
 
   const filteredLocations = useMemo(() => {
@@ -158,7 +133,6 @@ const LocationList = () => {
 
       <LocationMap
         locations={filteredLocations}
-        onBoundsChange={handleBoundsChange}
         onSelectLocation={setSelectedLocationId}
         selectedLocationId={selectedLocationId}
       />

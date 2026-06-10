@@ -37,9 +37,11 @@ const Navbar = () => {
         <div className="flex flex-wrap items-center gap-4 text-sm font-medium">
 
           {isAuthenticated && (
-            <NavLink className={linkClass} to="/profile">
-              Profile
-            </NavLink>
+            <>
+              <NavLink className={linkClass} to="/profile">
+                Profile
+              </NavLink>
+            </>
           )}
 
           <span className="hidden h-5 w-px bg-zinc-800 sm:block" />

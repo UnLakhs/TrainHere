@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +21,24 @@ public class LocationService {
     //get all approved locations as a list
     public List<LocationResponse> getApprovedLocations() {
         return getLocationsByStatus(LocationStatus.APPROVED);
+    }
+
+    public List<LocationResponse> getApprovedLocationsWithinBounds(
+            BigDecimal minLatitude,
+            BigDecimal maxLatitude,
+            BigDecimal minLongitude,
+            BigDecimal maxLongitude
+    ) {
+        return locationRepository.findWithinBounds(
+                        LocationStatus.APPROVED,
+                        minLatitude,
+                        maxLatitude,
+                        minLongitude,
+                        maxLongitude
+                )
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     public List<LocationResponse> getPendingLocations() {

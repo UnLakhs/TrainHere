@@ -129,8 +129,8 @@ const LocationList = () => {
         )}
       </div>
 
-      <div className="min-h-[520px] rounded-lg border border-zinc-800 bg-zinc-900/80 p-4 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
-        <div className="relative h-full min-h-[480px] overflow-hidden rounded-md border border-zinc-800 bg-[linear-gradient(90deg,rgba(63,63,70,.35)_1px,transparent_1px),linear-gradient(rgba(63,63,70,.35)_1px,transparent_1px)] bg-[size:48px_48px]">
+      <div className="min-h-130 rounded-lg border border-zinc-800 bg-zinc-900/80 p-4 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
+        <div className="relative h-full min-h-120 overflow-hidden rounded-md border border-zinc-800 bg-[linear-gradient(90deg,rgba(63,63,70,.35)_1px,transparent_1px),linear-gradient(rgba(63,63,70,.35)_1px,transparent_1px)] bg-size-[48px_48px]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(52,211,153,.12),transparent_32%),radial-gradient(circle_at_70%_70%,rgba(14,165,233,.10),transparent_34%)]" />
           <div className="absolute left-4 top-4 rounded-md border border-zinc-700 bg-zinc-950/85 px-3 py-2 text-sm text-zinc-200">
             Map preview

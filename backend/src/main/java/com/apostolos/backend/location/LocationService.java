@@ -1,5 +1,6 @@
 package com.apostolos.backend.location;
 
+import com.apostolos.backend.user.AppUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,8 +55,17 @@ public class LocationService {
         return mapToResponse(savedLocation);
     }
 
+    public LocationResponse updateLocationStatus(UUID id, LocationStatus status) {
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "location not found"));
+
+        location.updateStatus(status);
+        Location savedLocation = locationRepository.save(location);
+        return mapToResponse(savedLocation);
+    }
+
     //add location
-    public LocationResponse createLocation(LocationRequest request) {
+    public LocationResponse createLocation(LocationRequest request, AppUser owner) {
         Location location = new Location(
                 request.name(),
                 request.type(),
@@ -65,6 +75,7 @@ public class LocationService {
                 request.longitude()
                 );
         applyRequestToEntity(request, location);
+        location.assignOwner(owner);
 
         Location savedLocation = locationRepository.save(location);
         return mapToResponse(savedLocation);

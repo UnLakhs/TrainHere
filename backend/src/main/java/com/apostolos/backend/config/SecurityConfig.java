@@ -34,7 +34,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/locations/pending", "/api/locations/rejected").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/locations/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/locations/{id}/status").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/locations/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/locations", "/api/locations/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/locations").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -51,7 +56,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 

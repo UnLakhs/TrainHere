@@ -163,4 +163,14 @@ public class Location {
         this.longitude = longitude;
         this.updatedAt = Instant.now();
     }
+
+    public void assignOwner(AppUser owner) {
+        this.owner = owner;
+        this.updatedAt = Instant.now();
+    }
+
+    public void updateStatus(LocationStatus status) {
+        this.status = status;
+        this.updatedAt = Instant.now();
+    }
 }

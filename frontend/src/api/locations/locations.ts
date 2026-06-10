@@ -28,6 +28,13 @@ export type LocationRequest = {
   longitude: number;
 };
 
+export type LocationBoundsRequest = {
+  minLatitude: number;
+  maxLatitude: number;
+  minLongitude: number;
+  maxLongitude: number;
+};
+
 //get all APPROVED locations
 export const getLocations = async (): Promise<LocationResponse[]> => {
   try {
@@ -46,6 +53,36 @@ export const getLocations = async (): Promise<LocationResponse[]> => {
     return await response.json();
   } catch (error) {
     console.error("Error fetching locations:", error);
+    throw error;
+  }
+};
+
+export const getLocationsWithinBounds = async (
+  bounds: LocationBoundsRequest,
+): Promise<LocationResponse[]> => {
+  try {
+    const searchParams = new URLSearchParams({
+      minLatitude: String(bounds.minLatitude),
+      maxLatitude: String(bounds.maxLatitude),
+      minLongitude: String(bounds.minLongitude),
+      maxLongitude: String(bounds.maxLongitude),
+    });
+
+    const response = await fetch(`${baseUrl}/api/locations/bounds?${searchParams}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to fetch locations in map area.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching bounded locations:", error);
     throw error;
   }
 };

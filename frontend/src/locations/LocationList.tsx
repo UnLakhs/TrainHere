@@ -1,6 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getLocations, type LocationResponse } from "../api/locations/locations";
+import {
+  getLocations,
+  getLocationsWithinBounds,
+  type LocationBoundsRequest,
+  type LocationResponse,
+} from "../api/locations/locations";
+import LocationMap from "./LocationMap";
 
 type LocationTypeFilter = "ALL" | LocationResponse["type"];
 
@@ -37,6 +43,29 @@ const LocationList = () => {
     fetchLocations();
   }, []);
 
+  const handleBoundsChange = useCallback(async (bounds: LocationBoundsRequest) => {
+    try {
+      const response = await getLocationsWithinBounds(bounds);
+      setLocations(response);
+      setSelectedLocationId((currentSelectedId) => {
+        if (response.some((location) => location.id === currentSelectedId)) {
+          return currentSelectedId;
+        }
+
+        return response[0]?.id ?? null;
+      });
+      setStatus("success");
+    } catch (error) {
+      console.error("Error fetching locations inside map bounds:", error);
+      setStatus("error");
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not load locations inside this map area.",
+      );
+    }
+  }, []);
+
   const filteredLocations = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
@@ -52,8 +81,6 @@ const LocationList = () => {
       return matchesType && matchesSearch;
     });
   }, [locations, search, typeFilter]);
-
-  const bounds = useMemo(() => getCoordinateBounds(filteredLocations), [filteredLocations]);
 
   return (
     <section className="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:grid-cols-[minmax(360px,480px)_1fr]">
@@ -129,35 +156,12 @@ const LocationList = () => {
         )}
       </div>
 
-      <div className="min-h-130 rounded-lg border border-zinc-800 bg-zinc-900/80 p-4 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
-        <div className="relative h-full min-h-120 overflow-hidden rounded-md border border-zinc-800 bg-[linear-gradient(90deg,rgba(63,63,70,.35)_1px,transparent_1px),linear-gradient(rgba(63,63,70,.35)_1px,transparent_1px)] bg-size-[48px_48px]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(52,211,153,.12),transparent_32%),radial-gradient(circle_at_70%_70%,rgba(14,165,233,.10),transparent_34%)]" />
-          <div className="absolute left-4 top-4 rounded-md border border-zinc-700 bg-zinc-950/85 px-3 py-2 text-sm text-zinc-200">
-            Map preview
-          </div>
-
-          {filteredLocations.map((location) => {
-            const position = getMarkerPosition(location, bounds);
-            const isSelected = selectedLocationId === location.id;
-
-            return (
-              <Link
-                className={
-                  isSelected
-                    ? "absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300 p-2 shadow-lg shadow-emerald-950/60 ring-4 ring-emerald-300/25"
-                    : "absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-zinc-50 p-1.5 shadow-lg shadow-black/40 transition hover:bg-emerald-200"
-                }
-                key={location.id}
-                style={{ left: `${position.x}%`, top: `${position.y}%` }}
-                title={location.name}
-                to={`/locations/${location.id}`}
-              >
-                <span className="block h-2 w-2 rounded-full bg-zinc-950" />
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+      <LocationMap
+        locations={filteredLocations}
+        onBoundsChange={handleBoundsChange}
+        onSelectLocation={setSelectedLocationId}
+        selectedLocationId={selectedLocationId}
+      />
     </section>
   );
 };
@@ -227,39 +231,5 @@ const LocationCard = ({
     </div>
   </article>
 );
-
-const getCoordinateBounds = (locations: LocationResponse[]) => {
-  if (locations.length === 0) {
-    return {
-      minLatitude: 0,
-      maxLatitude: 1,
-      minLongitude: 0,
-      maxLongitude: 1,
-    };
-  }
-
-  const latitudes = locations.map((location) => location.latitude);
-  const longitudes = locations.map((location) => location.longitude);
-
-  return {
-    minLatitude: Math.min(...latitudes),
-    maxLatitude: Math.max(...latitudes),
-    minLongitude: Math.min(...longitudes),
-    maxLongitude: Math.max(...longitudes),
-  };
-};
-
-const getMarkerPosition = (
-  location: LocationResponse,
-  bounds: ReturnType<typeof getCoordinateBounds>,
-) => {
-  const latitudeRange = bounds.maxLatitude - bounds.minLatitude || 1;
-  const longitudeRange = bounds.maxLongitude - bounds.minLongitude || 1;
-
-  return {
-    x: 12 + ((location.longitude - bounds.minLongitude) / longitudeRange) * 76,
-    y: 88 - ((location.latitude - bounds.minLatitude) / latitudeRange) * 76,
-  };
-};
 
 export default LocationList;

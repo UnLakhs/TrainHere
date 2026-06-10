@@ -26,7 +26,7 @@ const LocationMap = ({
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
   const hasFitInitialBoundsRef = useRef(false);
-  const suppressNextBoundsChangeRef = useRef(false);
+  const shouldRefreshBoundsAfterMoveRef = useRef(false);
   const previousSelectedLocationIdRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -42,12 +42,16 @@ const LocationMap = ({
     });
 
     mapRef.current.addControl(new maplibregl.NavigationControl(), "top-right");
+    mapRef.current.on("movestart", (event) => {
+      shouldRefreshBoundsAfterMoveRef.current = Boolean(event.originalEvent);
+    });
+
     mapRef.current.on("moveend", () => {
-      if (suppressNextBoundsChangeRef.current) {
-        suppressNextBoundsChangeRef.current = false;
+      if (!shouldRefreshBoundsAfterMoveRef.current) {
         return;
       }
 
+      shouldRefreshBoundsAfterMoveRef.current = false;
       const bounds = mapRef.current?.getBounds();
 
       if (!bounds) {
@@ -107,7 +111,6 @@ const LocationMap = ({
 
     if (locations.length === 1) {
       hasFitInitialBoundsRef.current = true;
-      suppressNextBoundsChangeRef.current = true;
       map.easeTo({
         center: [locations[0].longitude, locations[0].latitude],
         zoom: 13,
@@ -117,7 +120,6 @@ const LocationMap = ({
 
     if (locations.length > 1) {
       hasFitInitialBoundsRef.current = true;
-      suppressNextBoundsChangeRef.current = true;
       map.fitBounds(getLocationBounds(locations), {
         padding: 64,
         maxZoom: 13,
@@ -146,7 +148,6 @@ const LocationMap = ({
       return;
     }
 
-    suppressNextBoundsChangeRef.current = true;
     mapRef.current.easeTo({
       center: [selectedLocation.longitude, selectedLocation.latitude],
       zoom: Math.max(mapRef.current.getZoom(), 13),

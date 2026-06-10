@@ -8,6 +8,8 @@ import Login from './auth/Login.tsx';
 import Profile from './auth/Profile.tsx';
 import Layout from './components/Layout.tsx';
 import LocationDetails from './locations/LocationDetails.tsx';
+import CreateLocationPage from './locations/CreateLocationPage.tsx';
+import AdminDashboard from './admin/AdminDashboard.tsx';
 
 
 const router = createBrowserRouter([
@@ -16,10 +18,14 @@ const router = createBrowserRouter([
     children: [
       {path: "/", element: <App />},
       {path: "/locations/:id", element: <LocationDetails /> },
+      {path: "/locations/new", element: <CreateLocationPage /> },
       {path: "/register", element: <Register /> },
       {path: "/login", element: <Login /> },
-      {path: "/profile", element: <Profile /> }
+      {path: "/profile", element: <Profile /> },
+      {path: "/admin", element: <AdminDashboard />},
+      {path: "/adminPanel", element: <AdminDashboard />}
     ]
+
   }
 ]);
 

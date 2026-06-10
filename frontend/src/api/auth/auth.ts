@@ -62,6 +62,7 @@ export async function loginUser(
   return await response.json();
 }
 
+//get logged in user info, token needed in header to verify that user is logged in
 export async function getCurrentUser(): Promise<CurrentUserResponse> {
   const token = localStorage.getItem(authTokenKey);
 

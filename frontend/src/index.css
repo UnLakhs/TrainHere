@@ -44,3 +44,12 @@ body {
   overflow-x: hidden;
   color: var(--color-text-primary);
 }
+
+.trainhere-map {
+  contain: paint;
+  position: relative;
+}
+
+.trainhere-map .maplibregl-canvas {
+  max-width: none;
+}

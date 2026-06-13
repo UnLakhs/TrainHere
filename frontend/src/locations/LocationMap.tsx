@@ -28,19 +28,29 @@ const LocationMap = ({
       return;
     }
 
-    mapRef.current = new maplibregl.Map({
+    const map = new maplibregl.Map({
       container: containerRef.current,
       style: mapStyle,
       center: defaultCenter,
       zoom: 11,
     });
 
-    mapRef.current.addControl(new maplibregl.NavigationControl(), "top-right");
+    mapRef.current = map;
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+
+    resizeObserver.observe(containerRef.current);
+    map.on("load", () => map.resize());
+    requestAnimationFrame(() => map.resize());
 
     return () => {
+      resizeObserver.disconnect();
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current = [];
-      mapRef.current?.remove();
+      map.remove();
       mapRef.current = null;
     };
   }, []);
@@ -129,9 +139,9 @@ const LocationMap = ({
   }, [locations, selectedLocationId]);
 
   return (
-    <div className="h-128 rounded-lg border border-(--color-border) bg-(--color-surface) p-4 lg:h-152">
+    <div className="relative isolate h-128 overflow-hidden rounded-lg border border-(--color-border) bg-(--color-surface) p-4 lg:h-152">
       <div
-        className="h-full overflow-hidden rounded-md border border-(--color-border)"
+        className="trainhere-map h-full w-full overflow-hidden rounded-md border border-(--color-border)"
         ref={containerRef}
       />
     </div>

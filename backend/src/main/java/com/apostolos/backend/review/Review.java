@@ -16,8 +16,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(
     name = "reviews",
     uniqueConstraints = @UniqueConstraint(name = "reviews_location_user_unique", columnNames = {"location_id", "user_id"})
@@ -54,13 +56,18 @@ public class Review {
     protected Review() {
     }
 
-    public Review(Location location, AppUser user, short rating) {
+    public Review(Location location, AppUser user, short rating, String title, String comment) {
         this.location = location;
         this.user = user;
         this.rating = rating;
+        this.title = title;
+        this.comment = comment;
     }
 
-    public UUID getId() {
-        return id;
+    public void updateDetails(short rating, String title, String comment) {
+        this.rating = rating;
+        this.title = title;
+        this.comment = comment;
+        this.updatedAt = Instant.now();
     }
 }

@@ -2,10 +2,12 @@ package com.apostolos.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.apostolos.backend.favorite.FavoriteRepository;
 import com.apostolos.backend.location.LocationRepository;
+import com.apostolos.backend.review.ReviewRepository;
 import com.apostolos.backend.user.AppUserRepository;
 
 @SpringBootTest(properties = {
@@ -25,6 +27,12 @@ class BackendApplicationTests {
 
     @MockitoBean
     private FavoriteRepository favoriteRepository;
+
+    @MockitoBean
+    private ReviewRepository reviewRepository;
+
+    @MockitoBean
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void contextLoads() {

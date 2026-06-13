@@ -173,4 +173,10 @@ public class Location {
         this.status = status;
         this.updatedAt = Instant.now();
     }
+
+    public void updateRatingSummary(BigDecimal averageRating, int reviewCount) {
+        this.averageRating = averageRating;
+        this.reviewCount = reviewCount;
+        this.updatedAt = Instant.now();
+    }
 }

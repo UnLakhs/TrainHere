@@ -4,35 +4,71 @@ import {
   getLocationById,
   type LocationResponse,
 } from "../api/locations/locations";
+import ReviewSection from "./ReviewSection";
 
 const LocationDetails = () => {
   const { id } = useParams();
   const [location, setLocation] = useState<LocationResponse | null>(null);
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    id ? "loading" : "error",
+  );
+  const [message, setMessage] = useState(id ? "" : "Location id is missing.");
 
-  useEffect(() => {
-    async function fetchLocationDetails() {
-      if (!id) {
-        setStatus("error");
-        setMessage("Location id is missing.");
-        return;
-      }
-
-      try {
-        setStatus("loading");
-        setMessage("");
-        const response = await getLocationById(id);
-        setLocation(response);
-        setStatus("success");
-      } catch (error) {
-        console.error("Error fetching location details:", error);
-        setStatus("error");
-        setMessage(error instanceof Error ? error.message : "Could not load location.");
-      }
+  const fetchLocationDetails = async () => {
+    if (!id) {
+      setStatus("error");
+      setMessage("Location id is missing.");
+      return;
     }
 
-    fetchLocationDetails();
+    try {
+      setStatus("loading");
+      setMessage("");
+      const response = await getLocationById(id);
+      setLocation(response);
+      setStatus("success");
+    } catch (error) {
+      console.error("Error fetching location details:", error);
+      setStatus("error");
+      setMessage(
+        error instanceof Error ? error.message : "Could not load location.",
+      );
+    }
+  };
+
+  useEffect(() => {
+    let shouldIgnore = false;
+
+    if (!id) {
+      return () => {
+        shouldIgnore = true;
+      };
+    }
+
+    getLocationById(id)
+      .then((response) => {
+        if (shouldIgnore) {
+          return;
+        }
+
+        setLocation(response);
+        setStatus("success");
+      })
+      .catch((error: unknown) => {
+        if (shouldIgnore) {
+          return;
+        }
+
+        console.error("Error fetching location details:", error);
+        setStatus("error");
+        setMessage(
+          error instanceof Error ? error.message : "Could not load location.",
+        );
+      });
+
+    return () => {
+      shouldIgnore = true;
+    };
   }, [id]);
 
   return (
@@ -42,7 +78,7 @@ const LocationDetails = () => {
           className="inline-flex items-center gap-2 text-sm font-semibold text-(--color-text-secondary) transition hover:text-(--color-text-primary)"
           to="/"
         >
-          <span aria-hidden="true">←</span>
+          <span aria-hidden="true">&lt;-</span>
           Back to locations
         </Link>
 
@@ -57,70 +93,81 @@ const LocationDetails = () => {
         )}
 
         {status === "success" && location && (
-          <article className="rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-2xl shadow-black/10 sm:p-8">
-            <div className="flex flex-col gap-3">
-              <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--color-text-secondary)">
-                <span
-                  className={
-                    location.type === "GYM"
-                      ? "h-2 w-2 rounded-full bg-(--color-category-neutral)"
-                      : "h-2 w-2 rounded-full bg-(--color-category-blue)"
-                  }
-                />
-                {location.type === "GYM" ? "Gym" : "Calisthenics park"}
-              </p>
-              <h1 className="text-4xl font-bold leading-tight">
-                {location.name}
-              </h1>
-              <p className="text-(--color-text-secondary)">
-                {location.city}, {location.country}
-              </p>
-              {location.description && (
-                <p className="max-w-3xl text-(--color-text-secondary)">{location.description}</p>
-              )}
-            </div>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
-                <p className="text-sm text-(--color-text-secondary)">Address</p>
-                <p className="mt-2 text-(--color-text-primary)">
-                  {location.address || "No address provided"}
+          <>
+            <article className="rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-2xl shadow-black/10 sm:p-8">
+              <div className="flex flex-col gap-3">
+                <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--color-text-secondary)">
+                  <span
+                    className={
+                      location.type === "GYM"
+                        ? "h-2 w-2 rounded-full bg-(--color-category-neutral)"
+                        : "h-2 w-2 rounded-full bg-(--color-category-blue)"
+                    }
+                  />
+                  {location.type === "GYM" ? "Gym" : "Calisthenics park"}
                 </p>
+                <h1 className="text-4xl font-bold leading-tight">
+                  {location.name}
+                </h1>
+                <p className="text-(--color-text-secondary)">
+                  {location.city}, {location.country}
+                </p>
+                {location.description && (
+                  <p className="max-w-3xl text-(--color-text-secondary)">
+                    {location.description}
+                  </p>
+                )}
               </div>
 
-              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
-                <p className="text-sm text-(--color-text-secondary)">Average rating</p>
-                <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
-                  {location.reviewCount === 0
-                    ? "No ratings yet"
-                    : `${location.averageRating.toFixed(1)} / 5`}
-                </p>
-              </div>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">Address</p>
+                  <p className="mt-2 text-(--color-text-primary)">
+                    {location.address || "No address provided"}
+                  </p>
+                </div>
 
-              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
-                <p className="text-sm text-(--color-text-secondary)">Reviews</p>
-                <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
-                  {location.reviewCount === 0
-                    ? "No reviews yet"
-                    : location.reviewCount}
-                </p>
-              </div>
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">
+                    Average rating
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
+                    {location.reviewCount === 0
+                      ? "No ratings yet"
+                      : `${location.averageRating.toFixed(1)} / 5`}
+                  </p>
+                </div>
 
-              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
-                <p className="text-sm text-(--color-text-secondary)">Latitude</p>
-                <p className="mt-2 font-mono text-sm text-(--color-text-primary)">
-                  {location.latitude.toFixed(6)}
-                </p>
-              </div>
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">Reviews</p>
+                  <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
+                    {location.reviewCount === 0
+                      ? "No reviews yet"
+                      : location.reviewCount}
+                  </p>
+                </div>
 
-              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
-                <p className="text-sm text-(--color-text-secondary)">Longitude</p>
-                <p className="mt-2 font-mono text-sm text-(--color-text-primary)">
-                  {location.longitude.toFixed(6)}
-                </p>
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">Latitude</p>
+                  <p className="mt-2 font-mono text-sm text-(--color-text-primary)">
+                    {location.latitude.toFixed(6)}
+                  </p>
+                </div>
+
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">Longitude</p>
+                  <p className="mt-2 font-mono text-sm text-(--color-text-primary)">
+                    {location.longitude.toFixed(6)}
+                  </p>
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+
+            <ReviewSection
+              locationId={location.id}
+              onReviewsChanged={fetchLocationDetails}
+            />
+          </>
         )}
       </section>
     </main>

@@ -53,6 +53,9 @@ const CreateLocationForm = ({
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [createMessage, setCreateMessage] = useState("");
+  const labelClass = "mt-4 block text-sm font-medium text-[var(--color-text-primary)]";
+  const fieldClass =
+    "mt-1 block w-full rounded-md border border-[var(--color-border)] bg-[var(--color-elevated)] px-3 py-2.5 text-[var(--color-text-primary)] outline-none transition placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent-indicator)] focus:ring-2 focus:ring-[var(--color-accent-indicator)]/20";
 
   const handleFormChange = (
     event: React.ChangeEvent<
@@ -101,18 +104,18 @@ const CreateLocationForm = ({
   return (
     <section className="mx-auto mt-10 max-w-5xl">
       <form
-        className="flex flex-col items-start gap-4 rounded-md bg-emerald-400/10 p-6 text-center"
+        className="flex flex-col items-start gap-4 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-left shadow-sm shadow-black/10"
         onSubmit={handleSubmit}
       >
         <div className="w-full">
           <label
-            className="block text-sm font-medium text-zinc-300"
+            className="block text-sm font-medium text-[var(--color-text-primary)]"
             htmlFor="locationName"
           >
             Location Name
           </label>
           <input
-            className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className={fieldClass}
             id="locationName"
             name="name"
             onChange={handleFormChange}
@@ -125,13 +128,13 @@ const CreateLocationForm = ({
 
         <div className="w-full">
           <label
-            className="mt-4 block text-sm font-medium text-zinc-300"
+            className={labelClass}
             htmlFor="locationType"
           >
             Location Type
           </label>
           <select
-            className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className={fieldClass}
             id="locationType"
             name="type"
             onChange={handleFormChange}
@@ -146,13 +149,13 @@ const CreateLocationForm = ({
 
         <div className="w-full">
           <label
-            className="mt-4 block text-sm font-medium text-zinc-300"
+            className={labelClass}
             htmlFor="locationDescription"
           >
             Description
           </label>
           <textarea
-            className="mt-1 block min-h-24 w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className={`${fieldClass} min-h-24`}
             id="locationDescription"
             name="description"
             onChange={handleFormChange}
@@ -164,13 +167,13 @@ const CreateLocationForm = ({
 
         <div className="w-full">
           <label
-            className="mt-4 block text-sm font-medium text-zinc-300"
+            className={labelClass}
             htmlFor="locationCountry"
           >
             Country
           </label>
           <input
-            className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className={fieldClass}
             id="locationCountry"
             name="country"
             onChange={handleFormChange}
@@ -183,13 +186,13 @@ const CreateLocationForm = ({
 
         <div className="w-full">
           <label
-            className="mt-4 block text-sm font-medium text-zinc-300"
+            className={labelClass}
             htmlFor="locationCity"
           >
             City
           </label>
           <input
-            className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className={fieldClass}
             id="locationCity"
             name="city"
             onChange={handleFormChange}
@@ -202,13 +205,13 @@ const CreateLocationForm = ({
 
         <div className="w-full">
           <label
-            className="mt-4 block text-sm font-medium text-zinc-300"
+            className={labelClass}
             htmlFor="locationAddress"
           >
             Address
           </label>
           <input
-            className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className={fieldClass}
             id="locationAddress"
             name="address"
             onChange={handleFormChange}
@@ -222,13 +225,13 @@ const CreateLocationForm = ({
         <div className="grid w-full gap-4 sm:grid-cols-2">
           <div>
             <label
-              className="mt-4 block text-sm font-medium text-zinc-300"
+              className={labelClass}
               htmlFor="locationLatitude"
             >
               Latitude
             </label>
             <input
-              className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+              className={fieldClass}
               id="locationLatitude"
               name="latitude"
               onChange={handleFormChange}
@@ -242,13 +245,13 @@ const CreateLocationForm = ({
 
           <div>
             <label
-              className="mt-4 block text-sm font-medium text-zinc-300"
+              className={labelClass}
               htmlFor="locationLongitude"
             >
               Longitude
             </label>
             <input
-              className="mt-1 block w-full rounded-md border border-zinc-600 bg-zinc-800 text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+              className={fieldClass}
               id="locationLongitude"
               name="longitude"
               onChange={handleFormChange}
@@ -265,7 +268,7 @@ const CreateLocationForm = ({
           <p
             className={
               createStatus === "success"
-                ? "w-full rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-left text-sm text-emerald-200"
+                ? "w-full rounded-md border border-[var(--color-accent-indicator)]/30 bg-[var(--color-accent-indicator)]/10 px-3 py-2 text-left text-sm text-[var(--color-text-primary)]"
                 : "w-full rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-left text-sm text-red-200"
             }
           >
@@ -274,7 +277,7 @@ const CreateLocationForm = ({
         )}
 
         <button
-          className="mt-6 inline-flex rounded-md bg-emerald-400 px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+          className="mt-6 inline-flex rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-text)] transition hover:bg-[var(--color-accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-page)] disabled:cursor-not-allowed disabled:bg-[var(--color-elevated)] disabled:text-[var(--color-text-tertiary)]"
           disabled={createStatus === "loading"}
           type="submit"
         >

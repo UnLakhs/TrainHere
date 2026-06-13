@@ -8,10 +8,20 @@ import {
   type CurrentUserResponse,
 } from "../api/auth/auth";
 
+type Theme = "dark" | "light";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(hasAuthToken());
-  const [currentUser, setCurrentUser] = useState<CurrentUserResponse | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUserResponse | null>(
+    null,
+  );
+  const [theme, setTheme] = useState<Theme>(() => getStoredTheme());
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("trainhereTheme", theme);
+  }, [theme]);
 
   useEffect(() => {
     async function syncCurrentUser() {
@@ -43,15 +53,17 @@ const Navbar = () => {
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     isActive
-      ? "text-emerald-300"
-      : "text-zinc-300 transition hover:text-zinc-50";
+      ? "text-[var(--color-text-primary)]"
+      : "text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]";
+
+  const nextTheme = theme === "dark" ? "light" : "dark";
 
   return (
-    <header className="sticky top-0 z-20 border-b border-zinc-800 bg-zinc-950/95 px-6 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 px-6 backdrop-blur">
       <nav className="mx-auto flex min-h-16 max-w-6xl flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div className="flex items-center justify-between gap-4">
           <Link
-            className="text-sm font-bold uppercase tracking-wide text-emerald-300"
+            className="text-sm font-bold uppercase tracking-wide text-[var(--color-text-primary)]"
             to="/"
           >
             TrainHere
@@ -59,12 +71,8 @@ const Navbar = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-4 text-sm font-medium">
-
           {isAuthenticated && (
             <>
-              <NavLink className={linkClass} to="/locations/new">
-                Submit location
-              </NavLink>
               {currentUser?.role === "ADMIN" && (
                 <NavLink className={linkClass} to="/admin">
                   Admin
@@ -76,11 +84,21 @@ const Navbar = () => {
             </>
           )}
 
-          <span className="hidden h-5 w-px bg-zinc-800 sm:block" />
+          <button
+            aria-label={`Switch to ${nextTheme} theme`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[var(--color-border)] text-[var(--color-text-primary)] transition hover:bg-[var(--color-elevated)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-page)]"
+            onClick={() => setTheme(nextTheme)}
+            title={`Switch to ${nextTheme} theme`}
+            type="button"
+          >
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          </button>
+
+          <span className="hidden h-5 w-px bg-[var(--color-border)] sm:block" />
 
           {isAuthenticated ? (
             <button
-              className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm font-semibold text-zinc-100 transition hover:border-red-300 hover:bg-red-400/10 hover:text-red-100 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-zinc-950"
+              className="rounded-md border border-[var(--color-border)] px-3 py-1.5 text-sm font-semibold text-[var(--color-text-primary)] transition hover:border-red-300/60 hover:bg-red-400/10 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-[var(--color-page)]"
               type="button"
               onClick={handleLogout}
             >
@@ -92,7 +110,7 @@ const Navbar = () => {
                 Sign in
               </NavLink>
               <NavLink
-                className="rounded-md bg-emerald-400 px-3 py-1.5 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-950"
+                className="rounded-md bg-[var(--color-accent)] px-3 py-1.5 text-sm font-semibold text-[var(--color-accent-text)] transition hover:bg-[var(--color-accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-page)]"
                 to="/register"
               >
                 Create account
@@ -104,5 +122,48 @@ const Navbar = () => {
     </header>
   );
 };
+
+const getStoredTheme = (): Theme => {
+  const storedTheme = localStorage.getItem("trainhereTheme");
+  return storedTheme === "light" ? "light" : "dark";
+};
+
+const SunIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-4 w-4"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+  >
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2" />
+    <path d="M12 20v2" />
+    <path d="m4.93 4.93 1.41 1.41" />
+    <path d="m17.66 17.66 1.41 1.41" />
+    <path d="M2 12h2" />
+    <path d="M20 12h2" />
+    <path d="m6.34 17.66-1.41 1.41" />
+    <path d="m19.07 4.93-1.41 1.41" />
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-4 w-4"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+  >
+    <path d="M20.99 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 20.99 12.79Z" />
+  </svg>
+);
 
 export default Navbar;

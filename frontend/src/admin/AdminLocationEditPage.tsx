@@ -38,30 +38,30 @@ const AdminLocationEditPage = () => {
   }, [id]);
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] bg-zinc-950 px-6 py-10 text-zinc-50">
+    <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-page)] px-6 py-10 text-[var(--color-text-primary)]">
       <section className="mx-auto max-w-5xl">
         <Link
-          className="text-sm font-semibold text-emerald-300 transition hover:text-emerald-200"
+          className="text-sm font-semibold text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
           to="/admin"
         >
           Back to admin
         </Link>
 
         <div className="mt-6">
-          <p className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
+          <p className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
             Admin edit
           </p>
           <h1 className="mt-3 text-4xl font-bold leading-tight">
             Review location details.
           </h1>
-          <p className="mt-4 max-w-2xl text-zinc-300">
+          <p className="mt-4 max-w-2xl text-[var(--color-text-secondary)]">
             Correct submitted information before approving it for public discovery.
           </p>
         </div>
       </section>
 
       {status === "loading" && (
-        <p className="mx-auto mt-10 max-w-5xl text-sm text-zinc-300">
+        <p className="mx-auto mt-10 max-w-5xl text-sm text-[var(--color-text-secondary)]">
           Loading location...
         </p>
       )}

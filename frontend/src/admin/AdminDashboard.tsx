@@ -68,39 +68,39 @@ const AdminDashboard = () => {
   
   const renderLocationCard = (location: LocationResponse, currentStatus: LocationStatus) => (
     <article
-      className="rounded-lg border border-zinc-800 bg-zinc-900/80 p-5 shadow-sm shadow-black/30"
+      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-sm shadow-black/10"
       key={location.id}
     >
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-300">
+        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
           {currentStatus}
         </p>
-        <h3 className="text-xl font-semibold text-zinc-50">{location.name}</h3>
-        <p className="text-sm text-zinc-400">
+        <h3 className="text-xl font-semibold text-[var(--color-text-primary)]">{location.name}</h3>
+        <p className="text-sm text-[var(--color-text-secondary)]">
           {location.city}, {location.country}
         </p>
-        <p className="text-sm text-zinc-300">Type: {location.type}</p>
-        <p className="font-mono text-sm text-zinc-400">
+        <p className="text-sm text-[var(--color-text-secondary)]">Type: {location.type}</p>
+        <p className="font-mono text-sm text-[var(--color-text-secondary)]">
           {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
         </p>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
-          className="rounded-md border border-zinc-700 px-3 py-2 text-sm font-semibold text-zinc-100 transition hover:border-zinc-500 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 focus:ring-offset-zinc-900"
+          className="rounded-md border border-[var(--color-border)] px-3 py-2 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-elevated)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-page)]"
           to={`/admin/locations/${location.id}/edit`}
         >
           Edit
         </Link>
         <button
-          className="rounded-md bg-emerald-400 px-3 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+          className="rounded-md bg-[var(--color-accent)] px-3 py-2 text-sm font-semibold text-[var(--color-accent-text)] transition hover:bg-[var(--color-accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-page)]"
           type="button"
           onClick={() => handleStatusChange(location.id, "APPROVED")}
         >
           Approve
         </button>
         <button
-          className="rounded-md border border-red-400/50 px-3 py-2 text-sm font-semibold text-red-100 transition hover:bg-red-400/10 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+          className="rounded-md border border-red-400/50 px-3 py-2 text-sm font-semibold text-red-500 transition hover:bg-red-400/10 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-[var(--color-page)]"
           type="button"
           onClick={() => handleStatusChange(location.id, "REJECTED")}
         >
@@ -111,22 +111,22 @@ const AdminDashboard = () => {
   );
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] bg-zinc-950 px-6 py-10 text-zinc-50">
+    <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-page)] px-6 py-10 text-[var(--color-text-primary)]">
       <section className="mx-auto flex max-w-6xl flex-col gap-8">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-emerald-300">
+          <p className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
             TrainHere Admin Dashboard
           </p>
           <h1 className="mt-4 text-4xl font-bold leading-tight">
             Location moderation
           </h1>
-          <p className="mt-4 max-w-2xl text-zinc-300">
+          <p className="mt-4 max-w-2xl text-[var(--color-text-secondary)]">
             Review submitted locations before they become visible in public search.
           </p>
         </div>
 
         {status === "loading" && (
-          <p className="text-sm text-zinc-300">Loading admin dashboard...</p>
+          <p className="text-sm text-[var(--color-text-secondary)]">Loading admin dashboard...</p>
         )}
 
         {message && (
@@ -134,7 +134,7 @@ const AdminDashboard = () => {
             className={
               status === "error"
                 ? "rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"
-                : "rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200"
+                : "rounded-md border border-[var(--color-accent-indicator)]/30 bg-[var(--color-accent-indicator)]/10 px-3 py-2 text-sm text-[var(--color-text-primary)]"
             }
           >
             {message}
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-semibold">Pending locations</h2>
               <div className="mt-4 flex flex-col gap-4">
                 {pendingLocations.length === 0 ? (
-                  <p className="rounded-md border border-zinc-800 bg-zinc-900/80 p-4 text-sm text-zinc-300">
+                  <p className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text-secondary)]">
                     No pending locations.
                   </p>
                 ) : (
@@ -162,7 +162,7 @@ const AdminDashboard = () => {
               <h2 className="text-2xl font-semibold">Rejected locations</h2>
               <div className="mt-4 flex flex-col gap-4">
                 {rejectedLocations.length === 0 ? (
-                  <p className="rounded-md border border-zinc-800 bg-zinc-900/80 p-4 text-sm text-zinc-300">
+                  <p className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text-secondary)]">
                     No rejected locations.
                   </p>
                 ) : (

@@ -23,8 +23,8 @@ const RequireAdmin = () => {
 
   if (status === "loading") {
     return (
-      <main className="min-h-[calc(100vh-4rem)] bg-zinc-950 px-6 py-10 text-zinc-50">
-        <p className="mx-auto max-w-5xl text-sm text-zinc-300">
+      <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-page)] px-6 py-10 text-[var(--color-text-primary)]">
+        <p className="mx-auto max-w-5xl text-sm text-[var(--color-text-secondary)]">
           Checking access...
         </p>
       </main>

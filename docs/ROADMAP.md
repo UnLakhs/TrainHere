@@ -23,7 +23,7 @@ Suggested first implementation step:
 * Add a minimal React app.
 * Verify both can run locally.
 
-## Phase 1: Domain And Database (Backend Foundation Complete)
+## Phase 1: Domain And Database (Complete)
 
 Purpose: define the core TrainHere data model before building complex UI.
 
@@ -47,7 +47,7 @@ Suggested first implementation step:
 
 * Model locations first, because the map and search experience depend on it.
 
-## Phase 2: Authentication And User Profiles
+## Phase 2: Authentication And User Profiles(complete)
 
 Purpose: allow real users to own contributions, reviews, and favorites.
 
@@ -65,7 +65,7 @@ Suggested first implementation step:
 
 * Start with email/password auth and keep social login out of the MVP.
 
-## Phase 3: Location Management
+## Phase 3: Location Management(complete)
 
 Purpose: make the platform useful by allowing locations to be created and viewed.
 
@@ -221,9 +221,9 @@ Potential features:
 
 ## Immediate Next Step
 
-Start with Phase 2:
+make "Near me" fuctionality for map 
 
-1. Add Spring Security configuration.
-2. Add password-based registration and login.
-3. Add JWT access tokens.
-4. Add the first protected user profile endpoint.
+1. Add a "Use my Location" button.
+2. Add a backend endpoint to find nearby locations.
+3. Add a sorting mechanism to sort results based on distance.
+4. Add a distance field in the location cards.

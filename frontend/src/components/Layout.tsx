@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 
 const Layout = () => {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
+    <div className="min-h-screen bg-[var(--color-page)] text-[var(--color-text-primary)]">
       <Navbar />
       <Outlet />
     </div>

@@ -60,13 +60,13 @@ const LocationList = () => {
   return (
     <section className="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:grid-cols-[minmax(360px,480px)_1fr]">
       <div className="flex flex-col gap-4">
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/80 p-4">
+        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
           <div className="flex flex-col gap-3">
-            <label className="text-sm font-medium text-zinc-200" htmlFor="locationSearch">
+            <label className="text-sm font-medium text-[var(--color-text-primary)]" htmlFor="locationSearch">
               Search
             </label>
             <input
-              className="rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-zinc-50 outline-none transition placeholder:text-zinc-500 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20"
+              className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] px-3 py-2.5 text-[var(--color-text-primary)] outline-none transition placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent-indicator)] focus:ring-2 focus:ring-[var(--color-accent-indicator)]/20"
               id="locationSearch"
               onChange={(event) => setSearch(event.target.value)}
               placeholder="City, country, or place name"
@@ -95,7 +95,7 @@ const LocationList = () => {
         </div>
 
         {status === "loading" && (
-          <p className="rounded-md border border-zinc-800 bg-zinc-900/80 p-4 text-sm text-zinc-300">
+          <p className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text-secondary)]">
             Loading locations...
           </p>
         )}
@@ -108,13 +108,13 @@ const LocationList = () => {
 
         {status === "success" && (
           <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between text-sm text-zinc-400">
+            <div className="flex items-center justify-between text-sm text-[var(--color-text-secondary)]">
               <span>{filteredLocations.length} locations</span>
               <span>Approved only</span>
             </div>
 
             {filteredLocations.length === 0 ? (
-              <p className="rounded-md border border-zinc-800 bg-zinc-900/80 p-4 text-sm text-zinc-300">
+              <p className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text-secondary)]">
                 No locations match these filters.
               </p>
             ) : (
@@ -152,8 +152,8 @@ const FilterButton = ({
   <button
     className={
       isActive
-        ? "rounded-md bg-emerald-400 px-3 py-1.5 text-sm font-semibold text-zinc-950"
-        : "rounded-md border border-zinc-700 px-3 py-1.5 text-sm font-semibold text-zinc-200 transition hover:border-zinc-500 hover:bg-zinc-800"
+        ? "rounded-md border border-[var(--color-border)] bg-[var(--color-elevated)] px-3 py-1.5 text-sm font-semibold text-[var(--color-text-primary)] shadow-sm shadow-black/10"
+        : "rounded-md border border-[var(--color-border)] px-3 py-1.5 text-sm font-semibold text-[var(--color-text-secondary)] transition hover:bg-[var(--color-elevated)] hover:text-[var(--color-text-primary)]"
     }
     onClick={onClick}
     type="button"
@@ -174,30 +174,40 @@ const LocationCard = ({
   <article
     className={
       isSelected
-        ? "rounded-lg border border-emerald-400/60 bg-zinc-900 p-4 shadow-sm shadow-emerald-950/40"
-        : "rounded-lg border border-zinc-800 bg-zinc-900/80 p-4 shadow-sm shadow-black/30 transition hover:border-zinc-700"
+        ? "relative rounded-lg border border-[var(--color-border)] bg-[var(--color-elevated)] p-4 shadow-sm shadow-black/20"
+        : "relative rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 shadow-sm shadow-black/10 transition hover:bg-[var(--color-elevated)]"
     }
     onMouseEnter={onSelect}
   >
+    {isSelected && (
+      <span className="absolute left-0 top-4 h-8 w-1 rounded-r-full bg-[var(--color-accent-indicator)]" />
+    )}
     <div className="flex items-start justify-between gap-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-300">
-          {location.type === "GYM" ? "Gym" : "Calisthenics park"}
+        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
+          <span
+            className={
+              location.type === "GYM"
+                ? "h-2 w-2 rounded-full bg-[var(--color-category-neutral)]"
+                : "h-2 w-2 rounded-full bg-[var(--color-category-blue)]"
+            }
+          />
+          {getLocationTypeLabel(location.type)}
         </p>
-        <h3 className="mt-1 text-lg font-semibold">{location.name}</h3>
-        <p className="mt-1 text-sm text-zinc-400">
+        <h3 className="mt-1 text-lg font-semibold text-[var(--color-text-primary)]">{location.name}</h3>
+        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
           {location.city}, {location.country}
         </p>
       </div>
-      <div className="rounded-md border border-zinc-800 bg-zinc-950 px-2.5 py-1 text-sm font-semibold text-zinc-100">
+      <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] px-2.5 py-1 text-sm font-semibold text-[var(--color-text-primary)]">
         {location.averageRating.toFixed(1)}
       </div>
     </div>
 
     <div className="mt-4 flex items-center justify-between gap-3">
-      <p className="text-sm text-zinc-400">{location.reviewCount} reviews</p>
+      <p className="text-sm text-[var(--color-text-secondary)]">{location.reviewCount} reviews</p>
       <Link
-        className="rounded-md bg-emerald-400 px-3 py-2 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-zinc-900"
+        className="rounded-md border border-[var(--color-border)] px-3 py-2 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-elevated)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface)]"
         to={`/locations/${location.id}`}
       >
         Details
@@ -205,5 +215,8 @@ const LocationCard = ({
     </div>
   </article>
 );
+
+const getLocationTypeLabel = (type: LocationResponse["type"]) =>
+  type === "GYM" ? "Gym" : "Calisthenics park";
 
 export default LocationList;

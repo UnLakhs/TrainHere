@@ -57,8 +57,10 @@ const LocationMap = ({
       const markerElement = document.createElement("button");
       markerElement.className =
         selectedLocationId === location.id
-          ? "h-5 w-5 rounded-full border-2 border-zinc-950 bg-emerald-300 shadow-lg shadow-black/50 ring-4 ring-emerald-300/25"
-          : "h-4 w-4 rounded-full border-2 border-zinc-950 bg-zinc-50 shadow-lg shadow-black/40";
+          ? "h-5 w-5 rounded-full border-2 border-[var(--color-page)] bg-[var(--color-accent-indicator)] shadow-lg shadow-black/50 ring-4 ring-[var(--color-accent-indicator)]/25"
+          : location.type === "GYM"
+            ? "h-4 w-4 rounded-full border-2 border-[var(--color-page)] bg-[var(--color-category-neutral)] shadow-lg shadow-black/40"
+            : "h-4 w-4 rounded-full border-2 border-[var(--color-page)] bg-[var(--color-category-blue)] shadow-lg shadow-black/40";
       markerElement.type = "button";
       markerElement.setAttribute("aria-label", `Select ${location.name}`);
 
@@ -127,9 +129,9 @@ const LocationMap = ({
   }, [locations, selectedLocationId]);
 
   return (
-    <div className="min-h-130 rounded-lg border border-zinc-800 bg-zinc-900/80 p-4 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
+    <div className="h-[32rem] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 lg:h-[38rem]">
       <div
-        className="h-full min-h-120 overflow-hidden rounded-md border border-zinc-800"
+        className="h-full overflow-hidden rounded-md border border-[var(--color-border)]"
         ref={containerRef}
       />
     </div>

@@ -36,10 +36,10 @@ const LocationDetails = () => {
   }, [id]);
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-page)] px-6 py-10 text-[var(--color-text-primary)]">
+    <main className="min-h-[calc(100vh-4rem)] bg-(--color-page) px-6 py-10 text-(--color-text-primary)">
       <section className="mx-auto flex max-w-5xl flex-col gap-6">
         <Link
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-text-secondary)] transition hover:text-[var(--color-text-primary)]"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-(--color-text-secondary) transition hover:text-(--color-text-primary)"
           to="/"
         >
           <span aria-hidden="true">←</span>
@@ -47,7 +47,7 @@ const LocationDetails = () => {
         </Link>
 
         {status === "loading" && (
-          <p className="text-sm text-[var(--color-text-secondary)]">Loading location...</p>
+          <p className="text-sm text-(--color-text-secondary)">Loading location...</p>
         )}
 
         {status === "error" && (
@@ -57,14 +57,14 @@ const LocationDetails = () => {
         )}
 
         {status === "success" && location && (
-          <article className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-2xl shadow-black/10 sm:p-8">
+          <article className="rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-2xl shadow-black/10 sm:p-8">
             <div className="flex flex-col gap-3">
-              <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
+              <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-(--color-text-secondary)">
                 <span
                   className={
                     location.type === "GYM"
-                      ? "h-2 w-2 rounded-full bg-[var(--color-category-neutral)]"
-                      : "h-2 w-2 rounded-full bg-[var(--color-category-blue)]"
+                      ? "h-2 w-2 rounded-full bg-(--color-category-neutral)"
+                      : "h-2 w-2 rounded-full bg-(--color-category-blue)"
                   }
                 />
                 {location.type === "GYM" ? "Gym" : "Calisthenics park"}
@@ -72,51 +72,51 @@ const LocationDetails = () => {
               <h1 className="text-4xl font-bold leading-tight">
                 {location.name}
               </h1>
-              <p className="text-[var(--color-text-secondary)]">
+              <p className="text-(--color-text-secondary)">
                 {location.city}, {location.country}
               </p>
               {location.description && (
-                <p className="max-w-3xl text-[var(--color-text-secondary)]">{location.description}</p>
+                <p className="max-w-3xl text-(--color-text-secondary)">{location.description}</p>
               )}
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                <p className="text-sm text-[var(--color-text-secondary)]">Address</p>
-                <p className="mt-2 text-[var(--color-text-primary)]">
+              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                <p className="text-sm text-(--color-text-secondary)">Address</p>
+                <p className="mt-2 text-(--color-text-primary)">
                   {location.address || "No address provided"}
                 </p>
               </div>
 
-              <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                <p className="text-sm text-[var(--color-text-secondary)]">Status</p>
-                <p className="mt-2 text-[var(--color-text-primary)]">{location.status}</p>
+              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                <p className="text-sm text-(--color-text-secondary)">Status</p>
+                <p className="mt-2 text-(--color-text-primary)">{location.status}</p>
               </div>
 
-              <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                <p className="text-sm text-[var(--color-text-secondary)]">Average rating</p>
-                <p className="mt-2 text-lg font-semibold text-[var(--color-text-primary)]">
+              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                <p className="text-sm text-(--color-text-secondary)">Average rating</p>
+                <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
                   {location.averageRating.toFixed(1)} / 5
                 </p>
               </div>
 
-              <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                <p className="text-sm text-[var(--color-text-secondary)]">Reviews</p>
-                <p className="mt-2 text-lg font-semibold text-[var(--color-text-primary)]">
+              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                <p className="text-sm text-(--color-text-secondary)">Reviews</p>
+                <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
                   {location.reviewCount}
                 </p>
               </div>
 
-              <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                <p className="text-sm text-[var(--color-text-secondary)]">Latitude</p>
-                <p className="mt-2 font-mono text-sm text-[var(--color-text-primary)]">
+              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                <p className="text-sm text-(--color-text-secondary)">Latitude</p>
+                <p className="mt-2 font-mono text-sm text-(--color-text-primary)">
                   {location.latitude.toFixed(6)}
                 </p>
               </div>
 
-              <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                <p className="text-sm text-[var(--color-text-secondary)]">Longitude</p>
-                <p className="mt-2 font-mono text-sm text-[var(--color-text-primary)]">
+              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                <p className="text-sm text-(--color-text-secondary)">Longitude</p>
+                <p className="mt-2 font-mono text-sm text-(--color-text-primary)">
                   {location.longitude.toFixed(6)}
                 </p>
               </div>

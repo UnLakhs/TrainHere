@@ -53,9 +53,9 @@ const CreateLocationForm = ({
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [createMessage, setCreateMessage] = useState("");
-  const labelClass = "mt-4 block text-sm font-medium text-[var(--color-text-primary)]";
+  const labelClass = "mt-4 block text-sm font-medium text-(--color-text-primary)";
   const fieldClass =
-    "mt-1 block w-full rounded-md border border-[var(--color-border)] bg-[var(--color-elevated)] px-3 py-2.5 text-[var(--color-text-primary)] outline-none transition placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent-indicator)] focus:ring-2 focus:ring-[var(--color-accent-indicator)]/20";
+    "mt-1 block w-full rounded-md border border-(--color-border) bg-(--color-elevated) px-3 py-2.5 text-(--color-text-primary) outline-none transition placeholder:text-(--color-text-tertiary) focus:border-(--color-accent-indicator) focus:ring-2 focus:ring-(--color-accent-indicator)/20";
 
   const handleFormChange = (
     event: React.ChangeEvent<
@@ -104,12 +104,12 @@ const CreateLocationForm = ({
   return (
     <section className="mx-auto mt-10 max-w-5xl">
       <form
-        className="flex flex-col items-start gap-4 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-left shadow-sm shadow-black/10"
+        className="flex flex-col items-start gap-4 rounded-md border border-(--color-border) bg-(--color-surface) p-6 text-left shadow-sm shadow-black/10"
         onSubmit={handleSubmit}
       >
         <div className="w-full">
           <label
-            className="block text-sm font-medium text-[var(--color-text-primary)]"
+            className="block text-sm font-medium text-(--color-text-primary)"
             htmlFor="locationName"
           >
             Location Name
@@ -268,7 +268,7 @@ const CreateLocationForm = ({
           <p
             className={
               createStatus === "success"
-                ? "w-full rounded-md border border-[var(--color-accent-indicator)]/30 bg-[var(--color-accent-indicator)]/10 px-3 py-2 text-left text-sm text-[var(--color-text-primary)]"
+                ? "w-full rounded-md border border-(--color-accent-indicator)/30 bg-(--color-accent-indicator)/10 px-3 py-2 text-left text-sm text-(--color-text-primary)"
                 : "w-full rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-left text-sm text-red-200"
             }
           >
@@ -277,7 +277,7 @@ const CreateLocationForm = ({
         )}
 
         <button
-          className="mt-6 inline-flex rounded-md bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-text)] transition hover:bg-[var(--color-accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent-indicator)] focus:ring-offset-2 focus:ring-offset-[var(--color-page)] disabled:cursor-not-allowed disabled:bg-[var(--color-elevated)] disabled:text-[var(--color-text-tertiary)]"
+          className="mt-6 inline-flex rounded-md bg-(--color-accent) px-4 py-2 text-sm font-semibold text-(--color-accent-text) transition hover:bg-(--color-accent-hover) focus:outline-none focus:ring-2 focus:ring-(--color-accent-indicator) focus:ring-offset-2 focus:ring-offset-(--color-page) disabled:cursor-not-allowed disabled:bg-(--color-elevated) disabled:text-(--color-text-tertiary)"
           disabled={createStatus === "loading"}
           type="submit"
         >

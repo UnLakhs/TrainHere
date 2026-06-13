@@ -46,24 +46,24 @@ const Profile = () => {
   };
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] bg-[var(--color-page)] px-6 py-10 text-[var(--color-text-primary)]">
+    <main className="min-h-[calc(100vh-4rem)] bg-(--color-page) px-6 py-10 text-(--color-text-primary)">
       <section className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl flex-col justify-center gap-8">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]">
+          <p className="text-sm font-semibold uppercase tracking-wide text-(--color-text-secondary)">
             TrainHere
           </p>
           <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-5xl">
             Your profile
           </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-[var(--color-text-secondary)]">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-(--color-text-secondary)">
             Manage the account connected to your saved training places and
             future location submissions.
           </p>
         </div>
 
-        <div className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-2xl shadow-black/10 sm:p-8">
+        <div className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-2xl shadow-black/10 sm:p-8">
           {status === "loading" && (
-            <p className="text-sm text-[var(--color-text-secondary)]">Loading your profile...</p>
+            <p className="text-sm text-(--color-text-secondary)">Loading your profile...</p>
           )}
 
           {status === "error" && (
@@ -75,35 +75,35 @@ const Profile = () => {
           {status === "success" && user && (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-[var(--color-text-secondary)]">Display name</span>
-                <span className="text-xl font-semibold text-[var(--color-text-primary)]">
+                <span className="text-sm text-(--color-text-secondary)">Display name</span>
+                <span className="text-xl font-semibold text-(--color-text-primary)">
                   {user.displayName}
                 </span>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                  <p className="text-sm text-[var(--color-text-secondary)]">Email</p>
-                  <p className="mt-2 wrap-break-word font-medium text-[var(--color-text-primary)]">
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">Email</p>
+                  <p className="mt-2 wrap-break-word font-medium text-(--color-text-primary)">
                     {user.email}
                   </p>
                 </div>
 
-                <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4">
-                  <p className="text-sm text-[var(--color-text-secondary)]">Role</p>
-                  <p className="mt-2 font-medium text-[var(--color-text-primary)]">{user.role}</p>
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
+                  <p className="text-sm text-(--color-text-secondary)">Role</p>
+                  <p className="mt-2 font-medium text-(--color-text-primary)">{user.role}</p>
                 </div>
 
-                <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-page)] p-4 sm:col-span-2">
-                  <p className="text-sm text-[var(--color-text-secondary)]">User ID</p>
-                  <p className="mt-2 wrap-break-word font-mono text-sm text-[var(--color-text-primary)]">
+                <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4 sm:col-span-2">
+                  <p className="text-sm text-(--color-text-secondary)">User ID</p>
+                  <p className="mt-2 wrap-break-word font-mono text-sm text-(--color-text-primary)">
                     {user.id}
                   </p>
                 </div>
               </div>
 
               <button
-                className="w-full rounded-md border border-[var(--color-border)] px-4 py-2.5 font-semibold text-[var(--color-text-primary)] transition hover:border-red-300 hover:bg-red-400/10 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-[var(--color-page)] sm:w-fit"
+                className="w-full rounded-md border border-(--color-border) px-4 py-2.5 font-semibold text-(--color-text-primary) transition hover:border-red-300 hover:bg-red-400/10 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 focus:ring-offset-(--color-page) sm:w-fit"
                 type="button"
                 onClick={handleLogout}
               >

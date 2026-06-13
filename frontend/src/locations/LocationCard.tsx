@@ -52,8 +52,9 @@ const LocationCard = ({
           </p>
         )}
         {location.reviewCount > 0 && (
-          <p className="mt-2 text-sm font-medium text-(--color-text-primary)">
-            Rating {location.averageRating.toFixed(1)}
+          <p className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-text-primary)">
+            <StarIcon />
+            {location.averageRating.toFixed(1)}
           </p>
         )}
       </div>
@@ -85,7 +86,9 @@ const LocationCard = ({
       <p className="text-sm text-(--color-text-secondary)">
         {location.reviewCount === 0
           ? "No reviews yet"
-          : `${location.reviewCount} reviews`}
+          : `${location.reviewCount} ${
+              location.reviewCount === 1 ? "review" : "reviews"
+            }`}
       </p>
       <Link
         className="rounded-md border border-(--color-border) px-3 py-2 text-sm font-semibold text-(--color-text-primary) transition hover:bg-(--color-elevated) focus:outline-none focus:ring-2 focus:ring-(--color-accent-indicator) focus:ring-offset-2 focus:ring-offset-(--color-surface)"
@@ -109,6 +112,17 @@ const HeartIcon = ({ isFilled }: { isFilled: boolean }) => (
     viewBox="0 0 24 24"
   >
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-4 w-4 text-(--color-accent-indicator)"
+    fill="currentColor"
+    viewBox="0 0 20 20"
+  >
+    <path d="m10 1.5 2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9L10 1.5Z" />
   </svg>
 );
 

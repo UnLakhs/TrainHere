@@ -155,7 +155,11 @@ const LocationMap = ({
 
     const userMarkerElement = document.createElement("div");
     userMarkerElement.className =
-      "h-5 w-5 rounded-full border-2 border-(--color-page) bg-[#EDEFF2] shadow-lg shadow-black/50 ring-4 ring-[#EDEFF2]/25";
+      "flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[#4A7FB5] shadow-lg shadow-black/50 ring-4 ring-[#4A7FB5]/25";
+
+    const userMarkerCenter = document.createElement("span");
+    userMarkerCenter.className = "h-2.5 w-2.5 rounded-full bg-white";
+    userMarkerElement.append(userMarkerCenter);
 
     userMarkerRef.current = new maplibregl.Marker({
       element: userMarkerElement,

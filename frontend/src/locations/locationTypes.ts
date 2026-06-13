@@ -4,8 +4,15 @@ import type {
 } from "../api/locations/locations";
 
 export type LocationListItem = LocationResponse | NearbyLocationResponse;
-export type LocationTypeFilter = "ALL" | "NEARBY" | LocationResponse["type"];
-export type StandardLocationTypeFilter = Exclude<LocationTypeFilter, "NEARBY">;
+export type LocationTypeFilter =
+  | "ALL"
+  | "FAVORITES"
+  | "NEARBY"
+  | LocationResponse["type"];
+export type StandardLocationTypeFilter = Exclude<
+  LocationTypeFilter,
+  "FAVORITES" | "NEARBY"
+>;
 
 export type UserLocation = {
   latitude: number;

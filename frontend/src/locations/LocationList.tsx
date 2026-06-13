@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { hasAuthToken, subscribeToAuthChanges } from "../api/auth/auth";
 import {
-  getLocations,
-  getNearbyLocations,
-} from "../api/locations/locations";
+  addFavorite,
+  getFavorites,
+  removeFavorite,
+} from "../api/favorites/favorites";
+import { getLocations, getNearbyLocations } from "../api/locations/locations";
 import LocationControls from "./LocationControls";
 import LocationMap from "./LocationMap";
 import LocationResults from "./LocationResults";
@@ -43,6 +46,11 @@ const LocationList = () => {
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
     null,
   );
+  const [favoriteLocationIds, setFavoriteLocationIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [favoriteMessage, setFavoriteMessage] = useState("");
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(hasAuthToken());
 
   // Re-fetches the FULL location list (used when leaving "Near me" mode to
   // go back to ALL/GYM/CALISTHENICS_PARK, since those filters apply to the
@@ -103,6 +111,62 @@ const LocationList = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const syncAuthState = () => {
+      const hasToken = hasAuthToken();
+      setIsUserAuthenticated(hasToken);
+
+      if (hasToken) {
+        setFavoriteMessage("");
+      } else {
+        setFavoriteLocationIds(new Set());
+      }
+    };
+
+    return subscribeToAuthChanges(syncAuthState);
+  }, []);
+
+  useEffect(() => {
+    let shouldIgnore = false;
+
+    if (!isUserAuthenticated) {
+      return () => {
+        shouldIgnore = true;
+      };
+    }
+
+    getFavorites()
+      .then((favorites) => {
+        if (shouldIgnore) {
+          return;
+        }
+
+        const nextFavoriteIds = new Set(
+          favorites.map((favorite) => favorite.location.id),
+        );
+
+        setFavoriteLocationIds(nextFavoriteIds);
+
+        if (typeFilter === "FAVORITES" && nextFavoriteIds.size === 0) {
+          setSelectedLocationId(null);
+        }
+      })
+      .catch((error: unknown) => {
+        if (shouldIgnore) {
+          return;
+        }
+
+        console.error("Error loading favorites:", error);
+        setFavoriteMessage(
+          error instanceof Error ? error.message : "Could not load favorites.",
+        );
+      });
+
+    return () => {
+      shouldIgnore = true;
+    };
+  }, [isUserAuthenticated, typeFilter]);
+
   // Handles clicks on All / Gyms / Parks.
   // If we're currently in "Near me" mode, the nearby dataset doesn't include
   // every location, so we need to re-fetch the full list before applying the
@@ -116,6 +180,21 @@ const LocationList = () => {
     }
 
     setTypeFilter(nextFilter);
+  };
+
+  const handleFavoritesClick = async () => {
+    if (!isUserAuthenticated) {
+      setFavoriteMessage("Sign in to see your favorite locations.");
+      return;
+    }
+
+    setFavoriteMessage("");
+
+    if (typeFilter === "NEARBY") {
+      await fetchAllLocations("ALL");
+    }
+
+    setTypeFilter("FAVORITES");
   };
 
   // "Near me" flow:
@@ -160,11 +239,60 @@ const LocationList = () => {
     }
   };
 
+  const handleFavoriteClick = async (locationId: string) => {
+    if (!isUserAuthenticated) {
+      setFavoriteMessage("Sign in to save favorite locations.");
+      return;
+    }
+
+    setFavoriteMessage("");
+    const wasFavorite = favoriteLocationIds.has(locationId);
+    const nextFavoriteIds = new Set(favoriteLocationIds);
+
+    if (wasFavorite) {
+      nextFavoriteIds.delete(locationId);
+    } else {
+      nextFavoriteIds.add(locationId);
+    }
+
+    setFavoriteLocationIds(nextFavoriteIds);
+
+    if (wasFavorite && typeFilter === "FAVORITES") {
+      setSelectedLocationId((currentSelectedLocationId) =>
+        currentSelectedLocationId === locationId ? null : currentSelectedLocationId,
+      );
+    }
+
+    try {
+      if (wasFavorite) {
+        await removeFavorite(locationId);
+      } else {
+        await addFavorite(locationId);
+      }
+    } catch (error) {
+      console.error("Error updating favorite:", error);
+      setFavoriteLocationIds((currentFavoriteIds) => {
+        const nextFavoriteIds = new Set(currentFavoriteIds);
+
+        if (wasFavorite) {
+          nextFavoriteIds.add(locationId);
+        } else {
+          nextFavoriteIds.delete(locationId);
+        }
+
+        return nextFavoriteIds;
+      });
+      setFavoriteMessage(
+        error instanceof Error ? error.message : "Could not update favorite.",
+      );
+    }
+  };
+
   // Client-side search + type filtering applied on top of whatever dataset
   // is currently loaded (full list or nearby subset). See locationUtils.
   const filteredLocations = useMemo(
-    () => filterLocations(locations, search, typeFilter),
-    [locations, search, typeFilter],
+    () => filterLocations(locations, favoriteLocationIds, search, typeFilter),
+    [favoriteLocationIds, locations, search, typeFilter],
   );
 
   return (
@@ -173,6 +301,7 @@ const LocationList = () => {
         <LocationControls
           isLocating={isLocating}
           nearbyMessage={nearbyMessage}
+          onFavoritesClick={() => void handleFavoritesClick()}
           onNearbyClick={handleNearbyClick}
           onSearchChange={setSearch}
           onTypeFilterClick={(nextFilter) =>
@@ -183,8 +312,12 @@ const LocationList = () => {
         />
 
         <LocationResults
+          favoriteLocationIds={favoriteLocationIds}
+          favoriteMessage={favoriteMessage}
+          isUserAuthenticated={isUserAuthenticated}
           locations={filteredLocations}
           message={message}
+          onFavoriteClick={handleFavoriteClick}
           onSelectLocation={setSelectedLocationId}
           selectedLocationId={selectedLocationId}
           status={status}

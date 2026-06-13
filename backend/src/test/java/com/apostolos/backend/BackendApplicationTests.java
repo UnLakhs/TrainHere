@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import com.apostolos.backend.favorite.FavoriteRepository;
 import com.apostolos.backend.location.LocationRepository;
 import com.apostolos.backend.user.AppUserRepository;
 
@@ -21,6 +22,9 @@ class BackendApplicationTests {
 
     @MockitoBean
     private AppUserRepository appUserRepository;
+
+    @MockitoBean
+    private FavoriteRepository favoriteRepository;
 
     @Test
     void contextLoads() {

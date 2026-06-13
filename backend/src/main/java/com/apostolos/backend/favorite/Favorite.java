@@ -16,8 +16,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(
     name = "favorites",
     uniqueConstraints = @UniqueConstraint(name = "favorites_location_user_unique", columnNames = {"location_id", "user_id"})
@@ -37,7 +39,7 @@ public class Favorite {
     private AppUser user;
 
     @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private final Instant createdAt = Instant.now();
 
     protected Favorite() {
     }
@@ -45,9 +47,5 @@ public class Favorite {
     public Favorite(Location location, AppUser user) {
         this.location = location;
         this.user = user;
-    }
-
-    public UUID getId() {
-        return id;
     }
 }

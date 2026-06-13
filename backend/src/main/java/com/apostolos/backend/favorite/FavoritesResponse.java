@@ -1,4 +1,11 @@
 package com.apostolos.backend.favorite;
 
-public class FavoritesResponse {
+import com.apostolos.backend.location.LocationResponse;
+
+import java.util.UUID;
+
+public record FavoritesResponse(
+        UUID id,
+        LocationResponse location
+) {
 }

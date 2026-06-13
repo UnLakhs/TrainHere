@@ -7,6 +7,7 @@ import type {
 type LocationControlsProps = {
   isLocating: boolean;
   nearbyMessage: string;
+  onFavoritesClick: () => void;
   onNearbyClick: () => void;
   onSearchChange: (search: string) => void;
   onTypeFilterClick: (filter: StandardLocationTypeFilter) => void;
@@ -17,6 +18,7 @@ type LocationControlsProps = {
 const LocationControls = ({
   isLocating,
   nearbyMessage,
+  onFavoritesClick,
   onNearbyClick,
   onSearchChange,
   onTypeFilterClick,
@@ -56,6 +58,11 @@ const LocationControls = ({
         isActive={typeFilter === "CALISTHENICS_PARK"}
         label="Parks"
         onClick={() => onTypeFilterClick("CALISTHENICS_PARK")}
+      />
+      <LocationFilterButton
+        isActive={typeFilter === "FAVORITES"}
+        label="Favorites"
+        onClick={onFavoritesClick}
       />
       <LocationFilterButton
         isActive={typeFilter === "NEARBY"}

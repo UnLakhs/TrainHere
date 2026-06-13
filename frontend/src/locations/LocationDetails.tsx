@@ -89,21 +89,20 @@ const LocationDetails = () => {
               </div>
 
               <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
-                <p className="text-sm text-(--color-text-secondary)">Status</p>
-                <p className="mt-2 text-(--color-text-primary)">{location.status}</p>
-              </div>
-
-              <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
                 <p className="text-sm text-(--color-text-secondary)">Average rating</p>
                 <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
-                  {location.averageRating.toFixed(1)} / 5
+                  {location.reviewCount === 0
+                    ? "No ratings yet"
+                    : `${location.averageRating.toFixed(1)} / 5`}
                 </p>
               </div>
 
               <div className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
                 <p className="text-sm text-(--color-text-secondary)">Reviews</p>
                 <p className="mt-2 text-lg font-semibold text-(--color-text-primary)">
-                  {location.reviewCount}
+                  {location.reviewCount === 0
+                    ? "No reviews yet"
+                    : location.reviewCount}
                 </p>
               </div>
 

@@ -6,6 +6,7 @@ import {
 
 export const filterLocations = (
   locations: LocationListItem[],
+  favoriteLocationIds: Set<string>,
   search: string,
   typeFilter: LocationTypeFilter,
 ) => {
@@ -13,16 +14,20 @@ export const filterLocations = (
 
   return locations.filter((location) => {
     const matchesType =
-      typeFilter === "ALL" || typeFilter === "NEARBY"
+      typeFilter === "ALL" ||
+      typeFilter === "FAVORITES" ||
+      typeFilter === "NEARBY"
         ? true
         : location.type === typeFilter;
+    const matchesFavorite =
+      typeFilter === "FAVORITES" ? favoriteLocationIds.has(location.id) : true;
     const matchesSearch = normalizedSearch
       ? `${location.name} ${location.city} ${location.country}`
           .toLowerCase()
           .includes(normalizedSearch)
       : true;
 
-    return matchesType && matchesSearch;
+    return matchesType && matchesFavorite && matchesSearch;
   });
 };
 
@@ -32,7 +37,9 @@ export const getLocationCountLabel = (
 ) =>
   typeFilter === "NEARBY"
     ? `${locationCount} locations within ${NEARBY_RADIUS_KM}km`
-    : `${locationCount} locations`;
+    : typeFilter === "FAVORITES"
+      ? `${locationCount} favorite locations`
+      : `${locationCount} locations`;
 
 export const getCurrentPosition = () =>
   new Promise<GeolocationPosition>((resolve, reject) => {

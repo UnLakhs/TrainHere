@@ -15,6 +15,10 @@ export type LocationResponse = {
   reviewCount: number;
 };
 
+export type NearbyLocationResponse = LocationResponse & {
+  distanceKm: number;
+};
+
 export type LocationStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export type LocationRequest = {
@@ -83,6 +87,37 @@ export const getLocationsWithinBounds = async (
     return await response.json();
   } catch (error) {
     console.error("Error fetching bounded locations:", error);
+    throw error;
+  }
+};
+
+export const getNearbyLocations = async (
+  latitude: number,
+  longitude: number,
+  radiusKm: number,
+): Promise<NearbyLocationResponse[]> => {
+  try {
+    const searchParams = new URLSearchParams({
+      latitude: String(latitude),
+      longitude: String(longitude),
+      radiusKm: String(radiusKm),
+    });
+
+    const response = await fetch(`${baseUrl}/api/locations/nearby?${searchParams}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage || "Failed to fetch nearby locations.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching nearby locations:", error);
     throw error;
   }
 };

@@ -129,9 +129,9 @@ const LocationMap = ({
   }, [locations, selectedLocationId]);
 
   return (
-    <div className="h-[32rem] rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 lg:h-[38rem]">
+    <div className="h-128 rounded-lg border border-(--color-border) bg-(--color-surface) p-4 lg:h-152">
       <div
-        className="h-full overflow-hidden rounded-md border border-[var(--color-border)]"
+        className="h-full overflow-hidden rounded-md border border-(--color-border)"
         ref={containerRef}
       />
     </div>

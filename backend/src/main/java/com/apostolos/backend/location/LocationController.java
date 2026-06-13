@@ -51,6 +51,15 @@ public class LocationController {
         );
     }
 
+    @GetMapping("/nearby")
+    public List<NearbyLocationResponse> getNearbyLocations(
+            @RequestParam BigDecimal latitude,
+            @RequestParam BigDecimal longitude,
+            @RequestParam(defaultValue = "10") BigDecimal radiusKm
+    ) {
+        return locationService.getNearbyApprovedLocations(latitude, longitude, radiusKm);
+    }
+
     @GetMapping("/pending")
     public List<LocationResponse> getPendingLocations() {
         return locationService.getPendingLocations();

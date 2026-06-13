@@ -12,6 +12,14 @@ import java.util.UUID;
 @Service
 public class LocationService {
 
+    private static final BigDecimal MIN_LATITUDE = BigDecimal.valueOf(-90);
+    private static final BigDecimal MAX_LATITUDE = BigDecimal.valueOf(90);
+    private static final BigDecimal MIN_LONGITUDE = BigDecimal.valueOf(-180);
+    private static final BigDecimal MAX_LONGITUDE = BigDecimal.valueOf(180);
+    private static final BigDecimal MIN_RADIUS_KM = BigDecimal.valueOf(0);
+    private static final BigDecimal MAX_RADIUS_KM = BigDecimal.valueOf(100);
+    private static final BigDecimal METERS_PER_KILOMETER = BigDecimal.valueOf(1000);
+
     private final LocationRepository locationRepository;
 
     public LocationService(LocationRepository locationRepository) {
@@ -38,6 +46,26 @@ public class LocationService {
                 )
                 .stream()
                 .map(this::mapToResponse)
+                .toList();
+    }
+
+    public List<NearbyLocationResponse> getNearbyApprovedLocations(
+            BigDecimal latitude,
+            BigDecimal longitude,
+            BigDecimal radiusKm
+    ) {
+        validateNearbySearch(latitude, longitude, radiusKm);
+
+        BigDecimal radiusMeters = radiusKm.multiply(METERS_PER_KILOMETER);
+
+        return locationRepository.findNearbyApprovedLocations(
+                        LocationStatus.APPROVED.name(),
+                        latitude,
+                        longitude,
+                        radiusMeters
+                )
+                .stream()
+                .map(this::mapNearbyProjectionToResponse)
                 .toList();
     }
 
@@ -146,5 +174,37 @@ public class LocationService {
                 location.getAverageRating(),
                 location.getReviewCount()
         );
+    }
+
+    private NearbyLocationResponse mapNearbyProjectionToResponse(NearbyLocationProjection location) {
+        return new NearbyLocationResponse(
+                location.getId(),
+                location.getName(),
+                LocationType.valueOf(location.getType()),
+                LocationStatus.valueOf(location.getStatus()),
+                location.getDescription(),
+                location.getCity(),
+                location.getCountry(),
+                location.getAddress(),
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getAverageRating(),
+                location.getReviewCount(),
+                location.getDistanceKm()
+        );
+    }
+
+    private void validateNearbySearch(BigDecimal latitude, BigDecimal longitude, BigDecimal radiusKm) {
+        if (latitude.compareTo(MIN_LATITUDE) < 0 || latitude.compareTo(MAX_LATITUDE) > 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Latitude must be between -90 and 90.");
+        }
+
+        if (longitude.compareTo(MIN_LONGITUDE) < 0 || longitude.compareTo(MAX_LONGITUDE) > 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Longitude must be between -180 and 180.");
+        }
+
+        if (radiusKm.compareTo(MIN_RADIUS_KM) <= 0 || radiusKm.compareTo(MAX_RADIUS_KM) > 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Radius must be greater than 0 and up to 100 km.");
+        }
     }
 }

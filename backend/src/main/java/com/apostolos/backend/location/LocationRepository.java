@@ -28,4 +28,46 @@ public interface LocationRepository extends JpaRepository<Location, UUID> {
         @Param("minLongitude") BigDecimal minLongitude,
         @Param("maxLongitude") BigDecimal maxLongitude
     );
+
+    @Query(value = """
+        select
+            id,
+            name,
+            type,
+            status,
+            description,
+            city,
+            country,
+            address,
+            latitude,
+            longitude,
+            average_rating as "averageRating",
+            review_count as "reviewCount",
+            round(
+                (
+                    ST_Distance(
+                        coordinates,
+                        ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography
+                    ) / 1000
+                )::numeric,
+                2
+            ) as "distanceKm"
+        from locations
+        where status = :status
+          and ST_DWithin(
+              coordinates,
+              ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
+              :radiusMeters
+          )
+        order by ST_Distance(
+            coordinates,
+            ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography
+        )
+        """, nativeQuery = true)
+    List<NearbyLocationProjection> findNearbyApprovedLocations(
+            @Param("status") String status,
+            @Param("latitude") BigDecimal latitude,
+            @Param("longitude") BigDecimal longitude,
+            @Param("radiusMeters") BigDecimal radiusMeters
+    );
 }

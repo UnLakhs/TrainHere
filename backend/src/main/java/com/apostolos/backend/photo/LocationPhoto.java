@@ -17,8 +17,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "location_photos")
 public class LocationPhoto {
 
@@ -41,7 +43,7 @@ public class LocationPhoto {
     private String publicUrl;
 
     @Column(length = 255)
-    private String caption;
+    private String caption; 
 
     @Column(length = 120)
     private String contentType;
@@ -53,7 +55,7 @@ public class LocationPhoto {
     private PhotoStatus status = PhotoStatus.PENDING;
 
     @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private final Instant createdAt = Instant.now();
 
     protected LocationPhoto() {
     }
@@ -63,7 +65,21 @@ public class LocationPhoto {
         this.storageKey = storageKey;
     }
 
-    public UUID getId() {
-        return id;
+    public void attachUploadDetails(
+            AppUser uploadedBy,
+            String publicUrl,
+            String caption,
+            String contentType,
+            Long sizeBytes
+    ) {
+        this.uploadedBy = uploadedBy;
+        this.publicUrl = publicUrl;
+        this.caption = caption;
+        this.contentType = contentType;
+        this.sizeBytes = sizeBytes;
+    }
+
+    public void updateStatus(PhotoStatus status) {
+        this.status = status;
     }
 }

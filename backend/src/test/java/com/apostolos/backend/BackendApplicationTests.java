@@ -7,6 +7,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.apostolos.backend.favorite.FavoriteRepository;
 import com.apostolos.backend.location.LocationRepository;
+import com.apostolos.backend.photo.LocationPhotoService;
 import com.apostolos.backend.review.ReviewRepository;
 import com.apostolos.backend.user.AppUserRepository;
 
@@ -30,6 +31,9 @@ class BackendApplicationTests {
 
     @MockitoBean
     private ReviewRepository reviewRepository;
+
+    @MockitoBean
+    private LocationPhotoService locationPhotoService;
 
     @MockitoBean
     private PasswordEncoder passwordEncoder;

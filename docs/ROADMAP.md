@@ -84,33 +84,35 @@ Suggested first implementation step:
 
 * Let authenticated users submit locations, but show only approved locations publicly.
 
-## Phase 4: Map Experience
+## Phase 4: Map Experience (Mostly Complete)
 
 Purpose: build the main discovery workflow.
 
 Deliverables:
 
-* MapLibre GL JS integration
-* OpenFreeMap style configuration
-* Location markers
-* Map marker popups
-* Nearby locations endpoint
-* Bounding-box map search endpoint
-* Browser geolocation support
-* Open directions in an external maps app or browser
+* MapLibre GL JS integration - complete
+* OpenFreeMap style configuration - complete
+* Location markers - complete
+* Map marker popups - complete
+* Nearby locations endpoint - complete
+* Bounding-box map search endpoint - complete
+* Browser geolocation support - complete
+* Open directions in an external maps app or browser - complete
 
 Suggested first implementation step:
 
 * Load approved locations as markers on the map, then add nearby and bounding-box queries.
 
-## Phase 5: Search And Filters
+## Phase 5: Search And Filters (Next)
 
 Purpose: help users find useful training spots quickly.
 
 Deliverables:
 
 * Search by city, country, area, or location name
-* Filter by location type
+* Filter by location type - basic version complete
+* Filter by favorites - complete
+* Filter by nearby locations - complete
 * Filter by rating
 * Filter by distance
 * Gym-specific filters:
@@ -129,35 +131,37 @@ Suggested first implementation step:
 
 * Build type, distance, and rating filters before adding detailed equipment filters.
 
-## Phase 6: Reviews, Ratings, Favorites, And Photos
+## Phase 6: Reviews, Ratings, Favorites, And Photos (Mostly Complete)
 
 Purpose: add the community layer that makes locations trustworthy.
 
 Deliverables:
 
-* Add review
-* Edit own review
-* Delete own review
-* Location average rating
-* Favorite and unfavorite location
-* Favorites page
-* Photo upload
-* Photo gallery on location details
-* Local storage implementation behind a storage interface
+* Add review - complete
+* Edit own review - complete
+* Delete own review - complete
+* Location average rating - complete
+* Favorite and unfavorite location - complete
+* Favorites filter/page experience - basic filter complete, dedicated page pending
+* Photo upload - complete for local development
+* Photo moderation before public display - complete
+* Photo gallery on location details - pending
+* Local storage implementation behind a storage interface - local storage complete, production object storage pending
 
 Suggested first implementation step:
 
 * Build reviews and favorites first, then photos.
 
-## Phase 7: Admin Dashboard
+## Phase 7: Admin Dashboard (Partially Complete)
 
 Purpose: keep community content clean and reliable.
 
 Deliverables:
 
-* Admin role
-* Pending locations queue
-* Approve or reject locations
+* Admin role - complete
+* Pending locations queue - complete
+* Approve or reject locations - complete
+* Photo moderation - complete
 * Review moderation
 * User management basics
 * Report handling
@@ -221,9 +225,9 @@ Potential features:
 
 ## Immediate Next Step
 
-make "Near me" fuctionality for map 
+Improve search and filters on the main map/list page.
 
-1. Add a "Use my Location" button.
-2. Add a backend endpoint to find nearby locations.
-3. Add a sorting mechanism to sort results based on distance.
-4. Add a distance field in the location cards.
+1. Add text search for location name, city, and country.
+2. Add a rating filter.
+3. Add distance filtering when Near me is active.
+4. Decide which gym-specific and park-specific filters are worth adding for the MVP.

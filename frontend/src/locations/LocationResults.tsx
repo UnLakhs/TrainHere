@@ -60,7 +60,7 @@ const LocationResults = ({
         </p>
       ) : (
         <div className="relative min-h-0 flex-1">
-          <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto pr-2 pb-8 [scrollbar-color:var(--color-border)_transparent] [scrollbar-width:thin]">
+          <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto pr-2 pb-8 [scrollbar-color:var(--color-border)_transparent] scrollbar-thin">
             {locations.map((location) => (
               <LocationCard
                 isFavorite={favoriteLocationIds.has(location.id)}

@@ -19,6 +19,12 @@ export type UserLocation = {
   longitude: number;
 };
 
+export type AdvancedLocationFilters = {
+  hasReviewsOnly: boolean;
+  maxDistanceKm: number;
+  minimumRating: number;
+};
+
 export const NEARBY_RADIUS_KM = 100;
 
 export const getLocationTypeLabel = (type: LocationResponse["type"]) =>

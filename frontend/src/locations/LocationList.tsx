@@ -16,11 +16,18 @@ import {
 } from "./locationUtils";
 import {
   NEARBY_RADIUS_KM,
+  type AdvancedLocationFilters,
   type LocationListItem,
   type LocationTypeFilter,
   type StandardLocationTypeFilter,
   type UserLocation,
 } from "./locationTypes";
+
+const defaultAdvancedFilters: AdvancedLocationFilters = {
+  hasReviewsOnly: false,
+  maxDistanceKm: NEARBY_RADIUS_KM,
+  minimumRating: 0,
+};
 
 const LocationList = () => {
   // Full/filtered dataset currently shown. Either the result of getLocations()
@@ -36,6 +43,8 @@ const LocationList = () => {
   // True while waiting on navigator.geolocation + the nearby API call.
   const [isLocating, setIsLocating] = useState(false);
   const [search, setSearch] = useState("");
+  const [advancedFilters, setAdvancedFilters] =
+    useState<AdvancedLocationFilters>(defaultAdvancedFilters);
   // "ALL" | "GYM" | "CALISTHENICS_PARK" | "NEARBY"
   // NOTE: "NEARBY" is a special mode — it's not just a client-side filter,
   // it swaps the entire dataset to the nearby API response (see handleNearbyClick).
@@ -291,17 +300,26 @@ const LocationList = () => {
   // Client-side search + type filtering applied on top of whatever dataset
   // is currently loaded (full list or nearby subset). See locationUtils.
   const filteredLocations = useMemo(
-    () => filterLocations(locations, favoriteLocationIds, search, typeFilter),
-    [favoriteLocationIds, locations, search, typeFilter],
+    () =>
+      filterLocations(
+        locations,
+        favoriteLocationIds,
+        search,
+        typeFilter,
+        advancedFilters,
+      ),
+    [advancedFilters, favoriteLocationIds, locations, search, typeFilter],
   );
 
   return (
     <section className="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:h-[calc(100vh-15rem)] lg:min-h-136 lg:grid-cols-[minmax(360px,480px)_1fr]">
       <div className="flex min-h-0 flex-col gap-4">
         <LocationControls
+          advancedFilters={advancedFilters}
           isLocating={isLocating}
           nearbyMessage={nearbyMessage}
           onFavoritesClick={() => void handleFavoritesClick()}
+          onAdvancedFiltersChange={setAdvancedFilters}
           onNearbyClick={handleNearbyClick}
           onSearchChange={setSearch}
           onTypeFilterClick={(nextFilter) =>

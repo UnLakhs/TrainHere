@@ -1,7 +1,9 @@
 import {
+  type AdvancedLocationFilters,
   NEARBY_RADIUS_KM,
   type LocationListItem,
   type LocationTypeFilter,
+  hasDistance,
 } from "./locationTypes";
 
 export const filterLocations = (
@@ -9,6 +11,7 @@ export const filterLocations = (
   favoriteLocationIds: Set<string>,
   search: string,
   typeFilter: LocationTypeFilter,
+  advancedFilters: AdvancedLocationFilters,
 ) => {
   const normalizedSearch = search.trim().toLowerCase();
 
@@ -26,8 +29,25 @@ export const filterLocations = (
           .toLowerCase()
           .includes(normalizedSearch)
       : true;
+    const matchesRating =
+      advancedFilters.minimumRating === 0 ||
+      location.averageRating >= advancedFilters.minimumRating;
+    const matchesReviews = advancedFilters.hasReviewsOnly
+      ? location.reviewCount > 0
+      : true;
+    const matchesDistance =
+      typeFilter === "NEARBY" && hasDistance(location)
+        ? location.distanceKm <= advancedFilters.maxDistanceKm
+        : true;
 
-    return matchesType && matchesFavorite && matchesSearch;
+    return (
+      matchesType &&
+      matchesFavorite &&
+      matchesSearch &&
+      matchesRating &&
+      matchesReviews &&
+      matchesDistance
+    );
   });
 };
 

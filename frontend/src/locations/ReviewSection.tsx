@@ -8,10 +8,12 @@ import {
   type ReviewRequest,
   type ReviewResponse,
 } from "../api/reviews/reviews";
+import RatingStars from "./RatingStars";
 
 type ReviewSectionProps = {
   locationId: string;
   onReviewsChanged: () => Promise<void>;
+  photoUploadSlot?: React.ReactNode;
 };
 
 type ReviewFormState = {
@@ -26,7 +28,11 @@ const emptyReviewForm: ReviewFormState = {
   comment: "",
 };
 
-const ReviewSection = ({ locationId, onReviewsChanged }: ReviewSectionProps) => {
+const ReviewSection = ({
+  locationId,
+  onReviewsChanged,
+  photoUploadSlot,
+}: ReviewSectionProps) => {
   const [reviews, setReviews] = useState<ReviewResponse[]>([]);
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
@@ -162,12 +168,9 @@ const ReviewSection = ({ locationId, onReviewsChanged }: ReviewSectionProps) => 
 
   return (
     <section className="rounded-lg border border-(--color-border) bg-(--color-surface) p-6 shadow-2xl shadow-black/10 sm:p-8">
-      <div className="flex flex-col gap-2">
-        <p className="text-sm font-semibold uppercase tracking-wide text-(--color-text-secondary)">
-          Community reviews
-        </p>
+      <div>
         <h2 className="text-2xl font-semibold text-(--color-text-primary)">
-          What people say
+          Community reviews
         </h2>
       </div>
 
@@ -194,7 +197,8 @@ const ReviewSection = ({ locationId, onReviewsChanged }: ReviewSectionProps) => 
             submitStatus={submitStatus}
           />
         ) : (
-          <p className="mt-5 rounded-md border border-(--color-border) bg-(--color-page) p-4 text-sm text-(--color-text-secondary)">
+          <p className="mt-5 inline-flex items-center gap-2 text-sm text-(--color-text-secondary)">
+            <CheckIcon />
             You have already reviewed this location. You can edit or delete
             your review below.
           </p>
@@ -204,6 +208,8 @@ const ReviewSection = ({ locationId, onReviewsChanged }: ReviewSectionProps) => 
           Sign in to write a review.
         </p>
       )}
+
+      {photoUploadSlot && <div className="mt-6">{photoUploadSlot}</div>}
 
       <div className="mt-6 flex flex-col gap-4">
         {status === "loading" && (
@@ -346,12 +352,13 @@ const ReviewCard = ({
   <article className="rounded-md border border-(--color-border) bg-(--color-page) p-4">
     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <p className="text-sm font-semibold text-(--color-text-primary)">
+        <p className="text-base font-semibold text-(--color-text-primary)">
           {review.displayName}
         </p>
-        <p className="mt-1 text-sm text-(--color-text-secondary)">
-          Rating {review.rating} / 5
-        </p>
+        <div className="mt-1 flex items-center gap-2 text-sm text-(--color-text-secondary)">
+          <RatingStars rating={review.rating} size="sm" />
+          <span>{review.rating.toFixed(1)}</span>
+        </div>
       </div>
 
       {review.ownedByCurrentUser && (
@@ -364,7 +371,7 @@ const ReviewCard = ({
             Edit
           </button>
           <button
-            className="rounded-md border border-red-400/50 px-3 py-1.5 text-sm font-semibold text-red-500 transition hover:bg-red-400/10"
+            className="rounded-md border border-(--color-border) px-3 py-1.5 text-sm font-semibold text-(--color-text-secondary) transition hover:border-red-400/50 hover:bg-red-400/10 hover:text-red-500"
             onClick={onDelete}
             type="button"
           >
@@ -375,7 +382,7 @@ const ReviewCard = ({
     </div>
 
     {review.title && (
-      <h3 className="mt-4 text-lg font-semibold text-(--color-text-primary)">
+      <h3 className="mt-4 text-base font-semibold text-(--color-text-primary)">
         {review.title}
       </h3>
     )}
@@ -385,6 +392,21 @@ const ReviewCard = ({
       </p>
     )}
   </article>
+);
+
+const CheckIcon = () => (
+  <svg
+    aria-hidden="true"
+    className="h-4 w-4 text-(--color-accent-indicator)"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+  >
+    <path d="m5 12 4 4L19 6" />
+  </svg>
 );
 
 const mapFormToRequest = (formData: ReviewFormState): ReviewRequest => ({

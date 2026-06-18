@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import maplibregl, { type Map, type Marker } from "maplibre-gl";
 import type { LocationResponse } from "../api/locations/locations";
 
@@ -6,6 +6,7 @@ type LocationMapProps = {
   locations: LocationResponse[];
   selectedLocationId: string | null;
   onSelectLocation: (id: string) => void;
+  variant?: "default" | "compact";
   userLocation?: {
     latitude: number;
     longitude: number;
@@ -20,14 +21,25 @@ const LocationMap = ({
   locations,
   selectedLocationId,
   onSelectLocation,
+  variant = "default",
   userLocation,
 }: LocationMapProps) => {
+  const validLocations = useMemo(
+    () => locations.filter(hasValidCoordinates),
+    [locations],
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
   const userMarkerRef = useRef<Marker | null>(null);
   const hasFitInitialBoundsRef = useRef(false);
   const previousSelectedLocationIdRef = useRef<string | null>(null);
+  const initialCenterRef = useRef<[number, number]>(
+    validLocations.length > 0
+      ? [validLocations[0].longitude, validLocations[0].latitude]
+      : defaultCenter,
+  );
+  const initialZoomRef = useRef(validLocations.length === 1 ? 13 : 11);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
@@ -37,8 +49,8 @@ const LocationMap = ({
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: mapStyle,
-      center: defaultCenter,
-      zoom: 11,
+      center: initialCenterRef.current,
+      zoom: initialZoomRef.current,
     });
 
     mapRef.current = map;
@@ -71,7 +83,7 @@ const LocationMap = ({
     }
 
     markersRef.current.forEach((marker) => marker.remove());
-    markersRef.current = locations.map((location) => {
+    markersRef.current = validLocations.map((location) => {
       const markerElement = document.createElement("button");
       markerElement.className = getLocationMarkerClass(
         location,
@@ -98,24 +110,24 @@ const LocationMap = ({
       return;
     }
 
-    if (locations.length === 1) {
+    if (validLocations.length === 1) {
       hasFitInitialBoundsRef.current = true;
       map.easeTo({
-        center: [locations[0].longitude, locations[0].latitude],
+        center: [validLocations[0].longitude, validLocations[0].latitude],
         zoom: 13,
         duration: 500,
       });
     }
 
-    if (locations.length > 1) {
+    if (validLocations.length > 1) {
       hasFitInitialBoundsRef.current = true;
-      map.fitBounds(getLocationBounds(locations), {
+      map.fitBounds(getLocationBounds(validLocations), {
         padding: 64,
         maxZoom: 13,
         duration: 500,
       });
     }
-  }, [locations, onSelectLocation, selectedLocationId]);
+  }, [validLocations, onSelectLocation, selectedLocationId]);
 
   useEffect(() => {
     if (previousSelectedLocationIdRef.current === selectedLocationId) {
@@ -129,7 +141,7 @@ const LocationMap = ({
 
     previousSelectedLocationIdRef.current = selectedLocationId;
 
-    const selectedLocation = locations.find(
+    const selectedLocation = validLocations.find(
       (location) => location.id === selectedLocationId,
     );
 
@@ -142,12 +154,12 @@ const LocationMap = ({
       zoom: Math.max(mapRef.current.getZoom(), 13),
       duration: 500,
     });
-  }, [locations, selectedLocationId]);
+  }, [validLocations, selectedLocationId]);
 
   useEffect(() => {
     const map = mapRef.current;
 
-    if (!map || !userLocation) {
+    if (!map || !hasValidCoordinates(userLocation)) {
       return;
     }
 
@@ -168,7 +180,7 @@ const LocationMap = ({
       .setPopup(new maplibregl.Popup({ offset: 18 }).setText("You are here"))
       .addTo(map);
 
-    const bounds = getLocationBounds(locations);
+    const bounds = getLocationBounds(validLocations);
     bounds.extend([userLocation.longitude, userLocation.latitude]);
 
     map.fitBounds(bounds, {
@@ -176,10 +188,16 @@ const LocationMap = ({
       maxZoom: 13,
       duration: 600,
     });
-  }, [locations, userLocation]);
+  }, [validLocations, userLocation]);
 
   return (
-    <div className="relative isolate h-128 overflow-hidden rounded-lg border border-(--color-border) bg-(--color-surface) p-4 lg:h-full">
+    <div
+      className={
+        variant === "compact"
+          ? "relative isolate h-56 overflow-hidden rounded-lg border border-(--color-border) bg-(--color-surface) p-3"
+          : "relative isolate h-128 overflow-hidden rounded-lg border border-(--color-border) bg-(--color-surface) p-4 lg:h-full"
+      }
+    >
       <div
         className="trainhere-map h-full w-full overflow-hidden rounded-md border border-(--color-border)"
         ref={containerRef}
@@ -196,6 +214,24 @@ const getLocationBounds = (locations: LocationResponse[]) => {
   });
 
   return bounds;
+};
+
+type CoordinateLike =
+  | {
+      latitude: number | null | undefined;
+      longitude: number | null | undefined;
+    }
+  | null
+  | undefined;
+
+const hasValidCoordinates = (
+  value: CoordinateLike,
+): value is { latitude: number; longitude: number } => {
+  if (!value) {
+    return false;
+  }
+
+  return Number.isFinite(value.latitude) && Number.isFinite(value.longitude);
 };
 
 const getLocationMarkerClass = (

@@ -3,8 +3,8 @@ import {
   getLocationTypeDotClass,
   getLocationTypeLabel,
   hasDistance,
-  type LocationListItem,
-} from "./locationTypes";
+} from "./locationConstants";
+import type { LocationListItem } from "./locationTypes";
 
 type LocationCardProps = {
   isFavorite: boolean;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import LocationFilterButton from "./LocationFilterButton";
+import { NEARBY_RADIUS_KM } from "./locationConstants";
 import type {
   AdvancedLocationFilters,
   LocationTypeFilter,
@@ -35,7 +36,10 @@ const LocationControls = ({
   const activeAdvancedFilterCount =
     (advancedFilters.hasReviewsOnly ? 1 : 0) +
     (advancedFilters.minimumRating > 0 ? 1 : 0) +
-    (typeFilter === "NEARBY" && advancedFilters.maxDistanceKm < 100 ? 1 : 0);
+    (typeFilter === "NEARBY" &&
+    advancedFilters.maxDistanceKm < NEARBY_RADIUS_KM
+      ? 1
+      : 0);
 
   const updateAdvancedFilters = (
     nextFilters: Partial<AdvancedLocationFilters>,
@@ -152,7 +156,7 @@ const LocationControls = ({
                   Distance within {advancedFilters.maxDistanceKm} km
                   <input
                     className="accent-(--color-accent-indicator)"
-                    max={100}
+                    max={NEARBY_RADIUS_KM}
                     min={5}
                     onChange={(event) =>
                       updateAdvancedFilters({

@@ -19,7 +19,10 @@ import {
 import LocationMap from "./LocationMap";
 import RatingStars from "./RatingStars";
 import ReviewSection from "./ReviewSection";
-import { getLocationTypeDotClass, getLocationTypeLabel } from "./locationTypes";
+import {
+  getLocationTypeDotClass,
+  getLocationTypeLabel,
+} from "./locationConstants";
 
 const LocationDetails = () => {
   const { id } = useParams();

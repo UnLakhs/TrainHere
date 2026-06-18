@@ -1,10 +1,9 @@
 import {
   type AdvancedLocationFilters,
-  NEARBY_RADIUS_KM,
   type LocationListItem,
   type LocationTypeFilter,
-  hasDistance,
 } from "./locationTypes";
+import { hasDistance, NEARBY_RADIUS_KM } from "./locationConstants";
 
 export const filterLocations = (
   locations: LocationListItem[],

@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hasAuthToken, subscribeToAuthChanges } from "../api/auth/auth";
 import {
   createReview,
   deleteReview,
-  getLocationReviews,
   updateReview,
   type ReviewRequest,
   type ReviewResponse,
 } from "../api/reviews/reviews";
 import RatingStars from "./RatingStars";
+import { useReviews } from "./useReviews";
 
 type ReviewSectionProps = {
   locationId: string;
@@ -33,11 +33,8 @@ const ReviewSection = ({
   onReviewsChanged,
   photoUploadSlot,
 }: ReviewSectionProps) => {
-  const [reviews, setReviews] = useState<ReviewResponse[]>([]);
-  const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading",
-  );
-  const [message, setMessage] = useState("");
+  const { loadReviews, message, reviews, setMessage, status } =
+    useReviews(locationId);
   const [formData, setFormData] = useState<ReviewFormState>(emptyReviewForm);
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [submitStatus, setSubmitStatus] = useState<
@@ -50,51 +47,6 @@ const ReviewSection = ({
     [reviews],
   );
   const canCreateReview = isAuthenticated && !ownedReview && !editingReviewId;
-
-  const loadReviews = useCallback(async () => {
-    try {
-      setStatus("loading");
-      setMessage("");
-      const response = await getLocationReviews(locationId);
-      setReviews(response);
-      setStatus("success");
-    } catch (error) {
-      console.error("Error loading reviews:", error);
-      setStatus("error");
-      setMessage(
-        error instanceof Error ? error.message : "Could not load reviews.",
-      );
-    }
-  }, [locationId]);
-
-  useEffect(() => {
-    let shouldIgnore = false;
-
-    getLocationReviews(locationId)
-      .then((response) => {
-        if (shouldIgnore) {
-          return;
-        }
-
-        setReviews(response);
-        setStatus("success");
-      })
-      .catch((error: unknown) => {
-        if (shouldIgnore) {
-          return;
-        }
-
-        console.error("Error loading reviews:", error);
-        setStatus("error");
-        setMessage(
-          error instanceof Error ? error.message : "Could not load reviews.",
-        );
-      });
-
-    return () => {
-      shouldIgnore = true;
-    };
-  }, [locationId]);
 
   useEffect(() => {
     const syncAuthState = () => {
